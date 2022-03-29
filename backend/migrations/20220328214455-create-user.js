@@ -33,7 +33,7 @@ module.exports = {
           notEmpty: true,
         },
       },
-      mot_de_passe: {
+      password: {
         allowNull: false,
         type: Sequelize.STRING,
       },
