@@ -25,7 +25,7 @@ exports.login = async (req, res) => {
     
     try {
         const user = await User.findOne({where : {email : req.body.email} });
-        
+       
         if (!user)
         {
             return res.status(401).json({ error: "Cette utilisateur n'existe pas" })
@@ -42,6 +42,23 @@ exports.login = async (req, res) => {
         return res.status(500).json(error); 
     }
 
+};
+
+exports.updatePassword = async (req, res) => {
+    
+    try {
+        const {newpassword}  = req.body;
+        const user = await User.findOne({where : {id : req.params.id}});
+        const newHash = await bcrypt.hash(newpassword, 10); 
+        await User.update({password : newHash},{where: {id : user.id}});
+           
+           return res.status(200).json(user)
+        }catch (error) {
+        return res.status(500).json(error); 
+    }
+
 }
+
+
 
 
