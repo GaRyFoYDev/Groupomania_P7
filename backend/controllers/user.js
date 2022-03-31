@@ -50,7 +50,7 @@ exports.updatePassword = async (req, res) => {
         const {newpassword}  = req.body;
         const user = await User.findOne({where : {id : req.params.id}});
         const newHash = await bcrypt.hash(newpassword, 10); 
-        await User.update({password : newHash},{where: {id : user.id}});
+         User.update({password : newHash},{where: {id : user.id}});
            
            return res.status(200).json(user)
         }catch (error) {
