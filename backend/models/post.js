@@ -13,8 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(User, {foreignKey: 'userId'} )
     }
+    toJSON(){
+     return {...this.get(), id: undefined, userId: undefined}
+    }
   }
   Post.init({
+    uuid :{
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     title:{
     type: DataTypes.STRING,
     allowNull: false,

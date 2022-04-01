@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      uuid :{
+        allowNull: false,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+      },
       nom: {
         allowNull: false,
         type: Sequelize.STRING,
@@ -36,6 +41,11 @@ module.exports = {
       password: {
         allowNull: false,
         type: Sequelize.STRING,
+      },
+      role: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        notEmpty: true,
       },
       createdAt: {
         allowNull: false,
