@@ -12,7 +12,8 @@ try {
         nom: req.body.nom,
         prenom: req.body.prenom,
         email: req.body.email,
-        password: hash
+        password: hash,
+        role: req.body.role,
     }); 
     return res.status(201).json(user)
 
