@@ -4,7 +4,9 @@
         <div class="form-container">
             <form >
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
-                <h2>Connectez-vous</h2>
+                <h2>Inscrivez-vous</h2>
+                <input  type="text" placeholder="Nom">
+                <input  type="text" placeholder="Prénom">
                 <input  type="email" placeholder="Adresse mail">
                 <input  type="password" placeholder="Mot de passe">
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
@@ -54,13 +56,13 @@ justify-content: center;
         justify-content: center;
         align-items: center;
         min-width: 30%;
-        min-height: 50vh;
+        min-height: 70vh;
         border-radius: 20px;
         color: var(--text-primary-color);
         padding: 10px;
         
         @media screen and (max-width: 600px){
-            min-height: 50vh;
+            min-height: 80vh;
             width: 85%;
 
            
@@ -105,7 +107,7 @@ justify-content: center;
                }
 
                  @media screen and (max-width: 600px){
-                 min-width: 50%;}
+                 min-width: 70%;}
 
 
                
