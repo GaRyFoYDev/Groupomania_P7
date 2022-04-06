@@ -23,10 +23,8 @@ const API_URL = 'http://localhost:5000/api/auth/'
 
 const {handleSubmit}= useForm()
 const mySubmit = handleSubmit(async(values) =>{
-    console.log(values);
+ 
     try {
-
-        
         const res = await fetch( API_URL + 'login', {
             method: 'POST',
             body: JSON.stringify(values),
@@ -34,7 +32,12 @@ const mySubmit = handleSubmit(async(values) =>{
             
 
         });
-        await router.push({path: '/home'});
+        
+            console.log(res);
+        if(res.ok === true){
+          await router.push({path: '/home'});
+        }
+       
     } catch (error) {
         console.log(error);
     }

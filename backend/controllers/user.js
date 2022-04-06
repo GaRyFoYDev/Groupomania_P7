@@ -39,8 +39,8 @@ exports.login = async (req, res) => {
          }
                 
         return res.status(200).json({ 
-          userId: user.id,
-          token: jwt.sign({ userId: user.id }, process.env.SECRET, {expiresIn : '24h'})
+          userUuid: user.uuid,
+          token: jwt.sign({ userUuid: user.uuid }, process.env.SECRET, {expiresIn : '24h'})
         });
             
     }catch (error) {
