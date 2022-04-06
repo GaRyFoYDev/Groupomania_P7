@@ -2,13 +2,13 @@
 <template>
  
         <div class="form-container">
-            <form >
+            <form @submit="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                 <h2>Inscrivez-vous</h2>
-                <input  type="text" placeholder="Nom">
-                <input  type="text" placeholder="Prénom">
-                <input  type="email" placeholder="Adresse mail">
-                <input  type="password" placeholder="Mot de passe">
+                <input v-model="nomValue" type="text" placeholder="Nom">
+                <input v-model="prenomValue" type="text" placeholder="Prénom">
+                <input v-model="emailValue" type="email" placeholder="Adresse mail">
+                <input v-model="passwordValue" type="password" placeholder="Mot de passe">
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
                 <p>Vous avez déja un compte ?<span><a href="">Connectez-vous</a></span></p>
             </form>
@@ -19,8 +19,28 @@
 
 <script setup>
 
+import {useForm, useField} from 'vee-validate';
+
+const {handleSubmit}= useForm()
+const mySubmit = handleSubmit(async(values) =>{
+    console.log(values);
+    try {
+        const res = await fetch('http://localhost:5000/api/auth/signup', {
+            method: 'POST',
+            body: JSON.stringify(values),
+            headers: { 'Content-Type': 'application/json'} 
 
 
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+const {value: nomValue} = useField('nom');
+const {value: prenomValue} = useField('prenom');
+const {value: emailValue} = useField('email');
+const {value: passwordValue} = useField('password');
 
 
 
@@ -61,9 +81,10 @@ justify-content: center;
         color: var(--text-primary-color);
         padding: 10px;
         
-        @media screen and (max-width: 600px){
+        @media screen and (max-width: 768px){
             min-height: 80vh;
             width: 85%;
+            padding: 20px;
 
            
         }
@@ -73,7 +94,7 @@ justify-content: center;
            justify-content: center;
 
            img{
-            @media screen and (max-width: 600px){
+            @media screen and (max-width: 768px){
             max-width: 70%;
             
            
@@ -91,7 +112,7 @@ justify-content: center;
                 font-size: 1rem;
                 margin-top: 15px;
 
-                 @media screen and (max-width: 600px){
+                 @media screen and (max-width: 768px){
                  min-width: 50%;}
 
             }
@@ -99,14 +120,14 @@ justify-content: center;
             input{
                border-radius: var(--border-radius);
                border: none;
-               padding: 8px;
+               padding: 12px;
                width: 40%;
 
                &::placeholder{
                    font-size: 0.9rem;
                }
 
-                 @media screen and (max-width: 600px){
+                 @media screen and (max-width: 768px){
                  min-width: 70%;}
 
 
@@ -124,7 +145,7 @@ justify-content: center;
                 }
             
             }
-                @media screen and (max-width: 600px){
+                @media screen and (max-width: 768px){
                  text-align: center;
                   
                  

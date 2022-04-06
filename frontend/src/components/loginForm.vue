@@ -8,7 +8,7 @@
                 <input  type="email" placeholder="Adresse mail">
                 <input  type="password" placeholder="Mot de passe">
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
-                <p>Vous avez déja un compte ?<span><a href="">Connectez-vous</a></span></p>
+                <p>Vous avez déja un compte ?<span><a href="#">Connectez-vous</a></span></p>
             </form>
         </div>
 
@@ -62,6 +62,7 @@ justify-content: center;
         @media screen and (max-width: 600px){
             min-height: 50vh;
             width: 85%;
+            padding: 20px
 
            
         }
