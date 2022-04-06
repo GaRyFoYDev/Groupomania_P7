@@ -10,28 +10,33 @@
                 <input v-model="emailValue" type="email" placeholder="Adresse mail">
                 <input v-model="passwordValue" type="password" placeholder="Mot de passe">
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
-                <p>Vous avez déja un compte ?<span><a href="">Connectez-vous</a></span></p>
+                <p>Vous avez déja un compte ?<span><router-link to="/">Connectez-vous</router-link></span></p>
             </form>
         </div>
 
-  
+
 </template>
 
 <script setup>
 
 import {useForm, useField} from 'vee-validate';
+import router from '../router';
+const API_URL = 'http://localhost:5000/api/auth/'
 
 const {handleSubmit}= useForm()
 const mySubmit = handleSubmit(async(values) =>{
     console.log(values);
     try {
-        const res = await fetch('http://localhost:5000/api/auth/signup', {
+
+        
+        const res = await fetch( API_URL + 'signup', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: { 'Content-Type': 'application/json'} 
 
 
-        })
+        });
+        await router.push({path: '/'});
     } catch (error) {
         console.log(error);
     }

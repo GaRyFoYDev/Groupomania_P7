@@ -2,13 +2,13 @@
 <template>
  
         <div class="form-container">
-            <form >
+            <form @submit="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                 <h2>Connectez-vous</h2>
-                <input  type="email" placeholder="Adresse mail">
-                <input  type="password" placeholder="Mot de passe">
+                <input  v-model="emailValue" type="email" placeholder="Adresse mail">
+                <input  v-model="passwordValue" type="password" placeholder="Mot de passe">
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
-                <p>Vous avez déja un compte ?<span><a href="#">Connectez-vous</a></span></p>
+                <p>Vous avez déja un compte ?<span><router-link to="/register">Inscrivez-vous</router-link></span></p>
             </form>
         </div>
 
@@ -17,6 +17,31 @@
 
 <script setup>
 
+import {useForm, useField} from 'vee-validate';
+import router from '../router';
+const API_URL = 'http://localhost:5000/api/auth/'
+
+const {handleSubmit}= useForm()
+const mySubmit = handleSubmit(async(values) =>{
+    console.log(values);
+    try {
+
+        
+        const res = await fetch( API_URL + 'login', {
+            method: 'POST',
+            body: JSON.stringify(values),
+            headers: { 'Content-Type': 'application/json'},
+            
+
+        });
+        await router.push({path: '/home'});
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+const {value: emailValue} = useField('email');
+const {value: passwordValue} = useField('password');
 
 
 
