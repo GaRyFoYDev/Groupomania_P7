@@ -44,8 +44,8 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
-        allowNull: false,
-        notEmpty: true,
+        allowNull: true,
+        
       },
       createdAt: {
         allowNull: false,
