@@ -22,12 +22,12 @@ import router from '../router';
 const API_URL = 'http://localhost:5000/api/auth/'
 
 const {handleSubmit}= useForm()
-const mySubmit = handleSubmit(async(values) =>{
+const mySubmit = handleSubmit(async(data) =>{
  
     try {
         const res = await fetch( API_URL + 'login', {
             method: 'POST',
-            body: JSON.stringify(values),
+            body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json'},
             
 
