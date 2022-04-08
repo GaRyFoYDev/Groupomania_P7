@@ -4,13 +4,20 @@
     <input id="publication" type="text" placeholder="Quoi de neuf ?">
     <div id="send">
         <div id="btn-wrapper">
-            <input type="file" name="file" id="file" class="inputfile" />
-            <label class="btn" for="file">Choisir une image</label> 
-           
+            <input type="file" name="file" id="file" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="onFileChange"/>
+            <label class="btn" for="file">Choisir une image</label>    
         </div>
-             <button class="btn btn-primary">Publier !</button>
+        <button v-if="url" id="delete-img" class="btn btn-primary" @click.prevent="deleteFileChange">Supprimer une image</button>
+        <button class="btn btn-primary">Publier !</button>
     </div>
+   
+    <div id="preview">
+        <img  v-if="url" :src="url" />
+    </div>
+
+    
 </form>
+   
 
 
  
@@ -18,7 +25,21 @@
   
 </template>
 
-<script>
+<script setup>
+
+import {ref} from 'vue';
+
+
+const url = ref('');
+
+const onFileChange = (e) => {
+    const file =  e.target.files[0];
+     url.value = URL.createObjectURL(file)
+}
+   
+const deleteFileChange = () =>{
+    url.value = null
+}
 
 
 
@@ -36,10 +57,10 @@ form{
     row-gap:10px;
     margin: 30px auto;
     background-color: var(--text-primary-color);
-    padding:20px;
+    padding: 20px;
     border: 1px solid rgba(52, 73, 94, 0.2);
     border-radius: 10px;
-
+   
     h3{
         margin-bottom: 20px;
     }
@@ -60,25 +81,11 @@ form{
     #send{
         display:flex;
         justify-content: space-between;
+      
 
        
     }
-    //  #btn-wrapper{
-    //         position: relative;
-    //        // overflow:hidden;
-
-    //         &input[type="file"]{
-    //         position: absolute;
-    //         top:0;
-    //         left:0;
-    //         font-size:20px;
-    //         background-color: blue;
-    //         opacity:1;
-    //         cursor: pointer;
-        
-    //         }
-
-    //     }
+    
 
     .inputfile {
 	width: 0.1px;
@@ -100,6 +107,27 @@ form{
 .inputfile + label:hover {
      background-color: var(--primary-1);
 }
+
+ #preview {
+    
+     
+     
+     img{
+         width: 60px;
+         height: 60px;
+         object-fit: cover-center;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+    
+     }
+ }
+ 
+ #delete-img{
+    width: 35%;
+
+ }
+ 
+ 
 
 }
 
