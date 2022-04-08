@@ -1,15 +1,20 @@
 <template>
+<form>
+    <h3>Exprimez-vous ...</h3>
+    <input id="publication" type="text" placeholder="Quoi de neuf ?">
+    <div id="send">
+        <div id="btn-wrapper">
+            <input type="file" name="file" id="file" class="inputfile" />
+            <label class="btn" for="file">Choisir une image</label> 
+           
+        </div>
+             <button class="btn btn-primary">Publier !</button>
+    </div>
+</form>
 
-<div class="container">
-    <div class ="container_post">
-        <img src="/src/assets/images/default_profile_400x400.png" alt=""> 
-        <input type="text" placeholder="Quoi de neuf ?" />
-    </div>
-    <div class ="container_send">
-        <i class="fa-regular fa-image"></i>
-        <button class="btn btn-primary">Envoyer</button>
-    </div>
-</div>
+
+ 
+
   
 </template>
 
@@ -22,67 +27,79 @@
 
 <style lang="scss">
 
-.container{
-    display:flex;
-    flex-direction: column;
-    row-gap: 20px;
+
+
+form{
     width: 40%;
-    height: 20vh;
+    display:flex;
+    flex-direction:column;
+    row-gap:10px;
+    margin: 30px auto;
     background-color: var(--text-primary-color);
+    padding:20px;
+    border: 1px solid rgba(52, 73, 94, 0.2);
     border-radius: 10px;
-    border: 1px solid var(--gray-2);
-    margin: 10px auto;
-    padding: 10px 20px;
 
-    img{
-        width:50px;
-        border-radius: 50%;
-        justify-self: center;
+    h3{
+        margin-bottom: 20px;
     }
 
-    input{
-        width:85%;
-        height:100%;;
-        font-size: 1.1rem;
-        margin-left:20px;
-        border:2px solid var(--gray-2);
-        border-radius:5px;
-        padding:10px;
-    
-    &:focus{
-        border: 1px solid var(--primary-1);
-        outline: 1px solid var(--primary-1);
-    }
-       
-       
-    }
+    #publication{
+        height: 10vh;
+        border: 1px solid rgba(52, 73, 94, 0.2);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 0 0 60px 10px;
+        font-size: 0.9rem;
 
-    &_post{
-        display:flex;
-        justify-content: space-between;
-        align-items: center;
-        height:80%;
-    }
-
-    &_send{
-        display:flex;
-        justify-content: space-between;
-        align-items:center;
-        height:20%;
-     
-        
-
-    i{
-        font-size: 25px;
-        color: var(--primary-1)
+        &::placeholder{
+            opacity: 0.7;
         }
+    }
 
-    button{
-        width: 25%
+    #send{
+        display:flex;
+        justify-content: space-between;
+
+       
     }
+    //  #btn-wrapper{
+    //         position: relative;
+    //        // overflow:hidden;
+
+    //         &input[type="file"]{
+    //         position: absolute;
+    //         top:0;
+    //         left:0;
+    //         font-size:20px;
+    //         background-color: blue;
+    //         opacity:1;
+    //         cursor: pointer;
         
-        
-    }
+    //         }
+
+    //     }
+
+    .inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+    .inputfile + label {
+    color: var(--text-primary-color);
+    background-color: var(--primary-2);
+    display: inline-block;
+    cursor: pointer;
+     font-size: 0.9rem;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+     background-color: var(--primary-1);
+}
 
 }
 

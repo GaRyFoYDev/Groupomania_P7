@@ -63,10 +63,11 @@
 
 
   .btn-primary {
-    background-color: var(--primary-1);
+    background-color: var(--primary-2);
+   
     color: var(--text-primary-color);
     &:hover {
-      background-color: var(--primary-2);
+      background-color: var(--primary-1);
     }
   }
   
