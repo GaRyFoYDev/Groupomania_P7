@@ -10,6 +10,7 @@
                 <button class="btn btn-primary" type="submit">S'inscrire</button>
                 <p>Vous avez déja un compte ?<span><router-link to="/register">Inscrivez-vous</router-link></span></p>
             </form>
+        
         </div>
 
   
@@ -19,6 +20,7 @@
 
 import {useForm, useField} from 'vee-validate';
 import router from '../router';
+
 const API_URL = 'http://localhost:5000/api/auth/'
 
 const {handleSubmit}= useForm()
@@ -29,12 +31,12 @@ const mySubmit = handleSubmit(async(data) =>{
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json'},
-            
-
-        });
+        }).then(res => res.json())
         
-            console.log(res);
-        if(res.ok === true){
+        localStorage.setItem("id", res.userUuid)
+        
+        if(res.token){
+        
           await router.push({path: '/home'});
         }
        
