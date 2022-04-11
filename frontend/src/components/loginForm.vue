@@ -7,7 +7,7 @@
                 <h2>Connectez-vous</h2>
                 <input  v-model="emailValue" type="email" placeholder="Adresse mail">
                 <input  v-model="passwordValue" type="password" placeholder="Mot de passe">
-                <button class="btn btn-primary" type="submit">S'inscrire</button>
+                <button class="btn btn-primary" type="submit">Se connecter</button>
                 <p>Vous avez déja un compte ?<span><router-link to="/register">Inscrivez-vous</router-link></span></p>
             </form>
         
@@ -21,6 +21,7 @@
 import {useForm, useField} from 'vee-validate';
 import router from '../router';
 
+
 const API_URL = 'http://localhost:5000/api/auth/'
 
 const {handleSubmit}= useForm()
@@ -32,7 +33,7 @@ const mySubmit = handleSubmit(async(data) =>{
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json'},
         }).then(res => res.json())
-        
+
         localStorage.setItem("id", res.userUuid)
         
         if(res.token){
@@ -45,7 +46,8 @@ const mySubmit = handleSubmit(async(data) =>{
     }
 })
 
-const {value: emailValue} = useField('email');
+const {value: emailValue} = useField('email')
+
 const {value: passwordValue} = useField('password');
 
 
@@ -116,7 +118,7 @@ justify-content: center;
 
             button{
                 padding: 12px;
-                width: 25%;
+                width: 30%;
                 font-size: 1rem;
                 margin-top: 15px;
 

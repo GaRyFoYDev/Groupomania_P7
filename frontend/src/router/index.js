@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('../views/register.vue'),
-      meta: {requiresAuth: true}
+      meta: {requiresAuth: false}
     }
   ]
 })
@@ -34,8 +34,9 @@ router.beforeEach((to, from) => {
 
 if(to.meta.requiresAuth && !isLoggedIn()){
   return { name: 'login'}
-}  
 
+}  
+  
 })
 
 export default router

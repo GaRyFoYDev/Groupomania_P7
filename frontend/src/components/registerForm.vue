@@ -4,13 +4,22 @@
         <div class="form-container">
             <form @submit="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
-                <h2>Inscrivez-vous</h2>
-                <input v-model="nomValue" type="text" placeholder="Nom">
-                <input v-model="prenomValue" type="text" placeholder="Prénom">
-                <input v-model="emailValue" type="email" placeholder="Adresse mail">
-                <input v-model="passwordValue" type="password" placeholder="Mot de passe">
-                <button class="btn btn-primary" type="submit">S'inscrire</button>
-                <p>Vous avez déja un compte ?<span><router-link to="/">Connectez-vous</router-link></span></p>
+                    <h2>Inscrivez-vous</h2>
+                        <input  v-model="nomValue" type="text" placeholder="Nom">
+                        <p v-if="nomError" class="error">{{nomError}}</p>
+
+                        <input v-model="prenomValue" type="text" placeholder="Prénom">
+                        <p v-if="prenomError"  class="error">{{prenomError}}</p>
+
+                        <input @blur="handleChange"  v-model="emailValue" type="email" placeholder="Adresse mail">
+                        <p v-if="emailError"  class="error">{{emailError}}</p>
+
+                        <input  @blur="handleChange" v-model="passwordValue" type="password" placeholder="Mot de passe">
+                        <p v-if="passwordError" class="error">{{passwordError}}</p>
+
+                    <button class="btn btn-primary" type="submit" :disabled="isSubmitting">S'inscrire</button>
+                    <p id="redirect">Vous avez déja un compte ?<span><router-link to="/">Connectez-vous</router-link></span></p>
+
             </form>
         </div>
 
@@ -21,11 +30,14 @@
 
 import {useForm, useField} from 'vee-validate';
 import router from '../router';
+import * as yup from 'yup';
+
 const API_URL = 'http://localhost:5000/api/auth/'
 
-const {handleSubmit}= useForm()
-const mySubmit = handleSubmit(async(values) =>{
-    console.log(values);
+const {handleSubmit, isSubmitting}= useForm();
+
+
+const mySubmit = handleSubmit(async(values, {resetForm}) =>{
     try {
 
         
@@ -33,20 +45,37 @@ const mySubmit = handleSubmit(async(values) =>{
             method: 'POST',
             body: JSON.stringify(values),
             headers: { 'Content-Type': 'application/json'} 
-
-
-        });
+        })
+        
+       
         await router.push({path: '/'});
+         resetForm();
     } catch (error) {
-        console.log(error);
+        JSON.parse(error);
     }
 })
 
-const {value: nomValue} = useField('nom');
-const {value: prenomValue} = useField('prenom');
-const {value: emailValue} = useField('email');
-const {value: passwordValue} = useField('password');
+const {value: nomValue, errorMessage: nomError} = useField('nom',
+     yup.string().required('Ce champ est obligatoire')
+     .matches(/^[a-zA-Z.-]{3,}$/, 
+     {message:'Votre nom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
 
+const {value: prenomValue,  errorMessage: prenomError} = useField('prenom', 
+     yup.string()
+     .required('Ce champ est obligatoire') 
+     .matches(/^[a-zA-Z.]{3,}$/, 
+     {message:'Votre prénom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
+
+ const {value: emailValue, errorMessage: emailError} = useField('email',
+    yup.string()
+    .required('Ce champ est obligatoire')
+    .email('Veuillez entrer une adresse e-mail valide'));
+
+const {value: passwordValue, errorMessage: passwordError} = useField('password', 
+    yup.string()
+    .required('Ce champ est obligatoire')
+    .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,30}$/, 
+    {message:'Votre mot de passe doit comporter entre 8 et 30 caractères et contenir une majuscule, un symbole et un chiffre.'}));
 
 
 
@@ -61,7 +90,7 @@ const {value: passwordValue} = useField('password');
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .form-container{
 position:absolute;
@@ -108,7 +137,7 @@ justify-content: center;
         
 
             div,h2,input{
-                margin-bottom: 20px;
+                margin: 10px 0;
             }
 
             button{
@@ -139,7 +168,7 @@ justify-content: center;
                
             }
 
-            p{
+            #redirect{
                 
                 margin-top: 50px;
                  a{
@@ -157,6 +186,17 @@ justify-content: center;
                  }
 
             }
+
+            .error{
+                width: 40%;
+                font-size: 14px;
+                padding:10px;
+                margin: 0;
+               
+            }
+
+           
+
            
     }
 }
