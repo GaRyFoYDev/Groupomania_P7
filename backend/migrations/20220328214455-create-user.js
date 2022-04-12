@@ -17,7 +17,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
         validate: {
-          isAlpha: true,
           notEmpty: true,
         },
       },
@@ -25,7 +24,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
         validate: {
-          isAlpha: true,
           notEmpty: true,
         },
       },

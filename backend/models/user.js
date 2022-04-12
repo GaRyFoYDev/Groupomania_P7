@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: true,
           notEmpty: true,
         },
       },
@@ -38,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: true,
           notEmpty: true,
         },
       },

@@ -1,14 +1,13 @@
-<script setup>
-import RegisterForm from '../components/registerForm.vue';
-
-</script>
-
 <template>
  
+<registerform />
 
-<RegisterForm />
-  
 </template>
+
+<script setup>
+import registerform from '../components/registerform.vue'
+
+</script>
 
 <style lang="scss">
 

@@ -2,12 +2,25 @@
     <nav>
         <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
         <div class="logout">
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-user-gear"></i>
+         <i @click="logOut" class="fa-solid fa-right-from-bracket"></i>
+        
         </div>
     </nav>
+
+  
 </template>
 
-<script>
+
+<script setup>
+import router from '../router';
+
+
+const logOut = async() =>{
+
+    await router.push({path: '/'});
+    localStorage.removeItem('id')   
+}
 
 
 
@@ -23,18 +36,27 @@ nav{
     background-color: var(--danger-2);
 
     .logo img {
-        width: 150px;
+        width: 40%;
+        cursor:pointer;
 
         
     }
 
     .logout{
+        width: 5%;
         font-size: 1.2rem;
         color: var(--text-primary-color);
-    
-    &:hover{
-        color: var(--primary-1);
-       
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: space-around;
+
+        
+    i{
+        cursor: pointer;
+        &:hover{
+            color: var(--primary-1);
+           
+        }
     }
 }
 

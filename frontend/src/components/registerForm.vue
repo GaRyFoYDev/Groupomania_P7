@@ -11,10 +11,10 @@
                         <input v-model="prenomValue" type="text" placeholder="Prénom">
                         <p v-if="prenomError"  class="error">{{prenomError}}</p>
 
-                        <input @blur="handleChange"  v-model="emailValue" type="email" placeholder="Adresse mail">
+                        <input  v-model="emailValue" type="email" placeholder="Adresse mail">
                         <p v-if="emailError"  class="error">{{emailError}}</p>
 
-                        <input  @blur="handleChange" v-model="passwordValue" type="password" placeholder="Mot de passe">
+                        <input  v-model="passwordValue" type="password" placeholder="Mot de passe">
                         <p v-if="passwordError" class="error">{{passwordError}}</p>
 
                     <button class="btn btn-primary" type="submit" :disabled="isSubmitting">S'inscrire</button>
@@ -57,13 +57,13 @@ const mySubmit = handleSubmit(async(values, {resetForm}) =>{
 
 const {value: nomValue, errorMessage: nomError} = useField('nom',
      yup.string().required('Ce champ est obligatoire')
-     .matches(/^[a-zA-Z.-]{3,}$/, 
+     .matches(/^[a-zA-Z.-éèàäêîïë]{3,}$/, 
      {message:'Votre nom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
 
 const {value: prenomValue,  errorMessage: prenomError} = useField('prenom', 
      yup.string()
      .required('Ce champ est obligatoire') 
-     .matches(/^[a-zA-Z.]{3,}$/, 
+     .matches(/^[a-zA-Z.-éèàäêîïë]{3,}$/, 
      {message:'Votre prénom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
 
  const {value: emailValue, errorMessage: emailError} = useField('email',
@@ -155,7 +155,7 @@ justify-content: center;
                border-radius: var(--border-radius);
                border: none;
                padding: 12px;
-               width: 40%;
+               width: 50%;
 
                &::placeholder{
                    font-size: 0.9rem;
@@ -188,7 +188,7 @@ justify-content: center;
             }
 
             .error{
-                width: 40%;
+                width: 50%;
                 font-size: 14px;
                 padding:10px;
                 margin: 0;
