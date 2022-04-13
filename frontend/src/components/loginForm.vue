@@ -2,13 +2,14 @@
 <template>
  
         <div class="form-container">
-            <form @submit="mySubmit">
+            <form @submit.prevent="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                 <h2>Connectez-vous</h2>
                 <input  v-model="emailValue" type="email" placeholder="Adresse mail">
-                <input  v-model="passwordValue" type="password" placeholder="Mot de passe">
+                <input v-model="passwordValue" type="password" placeholder="Mot de passe">
+                <p class="error" v-if="errorMessage">{{errorMessage}}</p>
                 <button class="btn btn-primary" type="submit">Se connecter</button>
-                <p>Vous avez déja un compte ?<span><router-link to="/register">Inscrivez-vous</router-link></span></p>
+                <p >Vous avez déja un compte ?<span><router-link to="/register">Inscrivez-vous</router-link></span></p>
             </form>
         
         </div>
@@ -18,14 +19,17 @@
 
 <script setup>
 
-import {useForm, useField} from 'vee-validate';
+import {useForm, useField, useResetForm} from 'vee-validate';
 import router from '../router';
+import {ref} from 'vue'
 
 
 const API_URL = 'http://localhost:5000/api/auth/'
 
+
 const {handleSubmit}= useForm()
-const mySubmit = handleSubmit(async(data) =>{
+const errorMessage = ref('')
+const mySubmit = handleSubmit(async(data, {resetForm}) =>{
  
     try {
         const res = await fetch( API_URL + 'login', {
@@ -33,12 +37,20 @@ const mySubmit = handleSubmit(async(data) =>{
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json'},
         }).then(res => res.json())
-
-        localStorage.setItem("id", res.userUuid)
         
-        if(res.token){
-        
+        if(res.userUuid && res.token){
+          localStorage.setItem("id", res.userUuid);
           await router.push({path: '/home'});
+          resetForm();
+
+        } else {
+
+          errorMessage.value = res.error
+
+          setTimeout(() => {
+             errorMessage.value = null 
+          }, 3500);
+        
         }
        
     } catch (error) {
@@ -47,15 +59,7 @@ const mySubmit = handleSubmit(async(data) =>{
 })
 
 const {value: emailValue} = useField('email')
-
 const {value: passwordValue} = useField('password');
-
-
-
-
-
-
-
 
 
 
@@ -66,7 +70,7 @@ const {value: passwordValue} = useField('password');
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .form-container{
 position:absolute;
@@ -162,7 +166,16 @@ justify-content: center;
                  }
 
             }
-           
+            .error{
+                width: 50%;
+                font-size: 0.875rem;
+                text-align: center;
+                margin: 0;
+                padding-bottom: 20px;
+              
+            }
+
+  
     }
 }
 

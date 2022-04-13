@@ -5,16 +5,16 @@
             <form @submit="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                     <h2>Inscrivez-vous</h2>
-                        <input  v-model="nomValue" type="text" placeholder="Nom">
+                        <input  @blur="handleNom"  v-model="nomValue" type="text" placeholder="Nom">
                         <p v-if="nomError" class="error">{{nomError}}</p>
 
-                        <input v-model="prenomValue" type="text" placeholder="Prénom">
+                        <input  @blur="handlePrenom" v-model="prenomValue" type="text" placeholder="Prénom">
                         <p v-if="prenomError"  class="error">{{prenomError}}</p>
 
-                        <input  v-model="emailValue" type="email" placeholder="Adresse mail">
+                        <input @blur="handleEmail"  v-model="emailValue" type="email" placeholder="Adresse mail">
                         <p v-if="emailError"  class="error">{{emailError}}</p>
 
-                        <input  v-model="passwordValue" type="password" placeholder="Mot de passe">
+                        <input @blur="handlePassword" v-model="passwordValue" type="password" placeholder="Mot de passe">
                         <p v-if="passwordError" class="error">{{passwordError}}</p>
 
                     <button class="btn btn-primary" type="submit" :disabled="isSubmitting">S'inscrire</button>
@@ -51,31 +51,31 @@ const mySubmit = handleSubmit(async(values, {resetForm}) =>{
         await router.push({path: '/'});
          resetForm();
     } catch (error) {
-        JSON.parse(error);
+      
     }
 })
 
-const {value: nomValue, errorMessage: nomError} = useField('nom',
+const {value: nomValue, errorMessage: nomError, handleChange: handleNom} = useField('nom',
      yup.string().required('Ce champ est obligatoire')
      .matches(/^[a-zA-Z.-éèàäêîïë]{3,}$/, 
-     {message:'Votre nom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
+     {message:'Votre nom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}), {validateOnValueUpdate: false});
 
-const {value: prenomValue,  errorMessage: prenomError} = useField('prenom', 
+const {value: prenomValue,  errorMessage: prenomError, handleChange: handlePrenom} = useField('prenom', 
      yup.string()
      .required('Ce champ est obligatoire') 
      .matches(/^[a-zA-Z.-éèàäêîïë]{3,}$/, 
-     {message:'Votre prénom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}));
+     {message:'Votre prénom ne doit comporter au moins 3 caractères et contenir uniquement des lettres séparés par des espaces si nécéssaires.'}), {validateOnValueUpdate: false});
 
- const {value: emailValue, errorMessage: emailError} = useField('email',
+ const {value: emailValue, errorMessage: emailError, handleChange: handleEmail} = useField('email',
     yup.string()
     .required('Ce champ est obligatoire')
-    .email('Veuillez entrer une adresse e-mail valide'));
+    .email('Veuillez entrer une adresse e-mail valide'), {validateOnValueUpdate: false} );
 
-const {value: passwordValue, errorMessage: passwordError} = useField('password', 
+const {value: passwordValue, errorMessage: passwordError, handleChange: handlePassword} = useField('password', 
     yup.string()
     .required('Ce champ est obligatoire')
     .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,30}$/, 
-    {message:'Votre mot de passe doit comporter entre 8 et 30 caractères et contenir une majuscule, un symbole et un chiffre.'}));
+    {message:'Votre mot de passe doit comporter entre 8 et 30 caractères et contenir une majuscule, un symbole et un chiffre.'}), {validateOnValueUpdate: false});
 
 
 
@@ -189,7 +189,7 @@ justify-content: center;
 
             .error{
                 width: 50%;
-                font-size: 14px;
+                font-size: 0.875rem;
                 padding:10px;
                 margin: 0;
                

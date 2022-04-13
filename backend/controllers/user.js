@@ -49,6 +49,36 @@ exports.login = async (req, res) => {
 
 };
 
+exports.getAllUsers = async (req, res) =>{
+    try {
+        const users = await User.findAll()
+        return res.status(200).json(users);
+        
+    } catch (error) {
+        
+        return res.status(500).json(error)
+    }
+    
+}
+
+exports.getOneUser = async (req, res) =>{
+    try {
+        
+
+        const user = await User.findOne({where: {uuid :req.params.uuid}});
+        return res.status(200).json(user);
+        
+    } catch (error) {
+        
+        return res.status(500).json(error)
+    }
+    
+}
+
+
+
+
+
 exports.updatePassword = async (req, res) => {
     
     try {
@@ -63,19 +93,3 @@ exports.updatePassword = async (req, res) => {
     }
 
 }
-
-exports.allUsers = async (req, res) =>{
-    try {
-        const users = await User.findAll()
-        return res.status(200).json(users);
-        
-    } catch (error) {
-        
-        return res.status(500).json(error)
-    }
-
-}
-
-
-
-
