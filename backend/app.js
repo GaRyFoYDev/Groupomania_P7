@@ -1,5 +1,6 @@
 const express = require('express');
 const { sequelize} = require('./models');
+const path = require("path");
 
 const port = process.env.PORT || 3000;
 
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use('/api/auth', userRoutes);
 app.use('/api/posts', postRoutes);
 
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 
 app.listen(port, async () => {

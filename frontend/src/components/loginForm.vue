@@ -2,7 +2,7 @@
 <template>
  
         <div class="form-container">
-            <form @submit.prevent="mySubmit">
+            <form @submit.prevent="mySubmit" >
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                 <h2>Connectez-vous</h2>
                 <input  v-model="emailValue" type="email" placeholder="Adresse mail">
@@ -19,12 +19,15 @@
 
 <script setup>
 
-import {useForm, useField, useResetForm} from 'vee-validate';
+import {useForm, useField} from 'vee-validate';
 import router from '../router';
-import {ref} from 'vue'
+import {ref} from 'vue';
+import {useLoginStore} from '@/stores/login';
+
+const store = useLoginStore();
 
 
-const API_URL = 'http://localhost:5000/api/auth/'
+const API_URL = 'http://localhost:5000/api/auth/';
 
 
 const {handleSubmit}= useForm()
@@ -39,10 +42,19 @@ const mySubmit = handleSubmit(async(data, {resetForm}) =>{
         }).then(res => res.json())
         
         if(res.userUuid && res.token){
-          localStorage.setItem("id", res.userUuid);
+            
+         store.$state = {
+             userUuid : res.userUuid,
+             token : res.token, 
+             isLogged : true 
+             };
+
+         
           await router.push({path: '/home'});
           resetForm();
-
+        
+      
+          
         } else {
 
           errorMessage.value = res.error

@@ -14,12 +14,14 @@
 
 <script setup>
 import router from '../router';
-
+import { useLoginStore } from '../stores/login';
+const store = useLoginStore();
 
 const logOut = async() =>{
 
+    store.$reset();
     await router.push({path: '/'});
-    localStorage.removeItem('id')   
+    console.log(store);  
 }
 
 

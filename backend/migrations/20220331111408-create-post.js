@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      attachement: {
+      image: {
         type: Sequelize.STRING,
         allowNull: false,
       },

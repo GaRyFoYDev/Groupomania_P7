@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import {useLoginStore} from '@/stores/login';
+
 
 
 const router = createRouter({
@@ -27,12 +29,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  function isLoggedIn(){
-    if (localStorage.getItem("id"))
-    return true
-  } 
-
-if(to.meta.requiresAuth && !isLoggedIn()){
+  const store = useLoginStore();
+  console.log(store.isLogged);
+  
+if(to.meta.requiresAuth && store.isLogged === false){
   return { name: 'login'}
 
 }  

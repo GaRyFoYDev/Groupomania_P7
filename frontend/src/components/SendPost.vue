@@ -1,7 +1,7 @@
 <template>
-<form>
+<form @submit.prevent="sendPost" enctype="multipart/form-data">
     <h3>Exprimez-vous ...</h3>
-    <input id="publication" type="text" placeholder="Quoi de neuf ?">
+    <input v-model="content" id="publication" type="text" placeholder="Quoi de neuf ?" @change="contentChange">
     <div id="send">
         <div id="btn-wrapper">
             <input type="file" name="file" id="file" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="onFileChange"/>
@@ -28,18 +28,77 @@
 <script setup>
 
 import {ref} from 'vue';
+import {useLoginStore} from '@/stores/login';
+import {usePostStore} from '@/stores/post';
 
+const loginStore = useLoginStore();
+const postStore = usePostStore();
 
+const content = ref('');
 const url = ref('');
+const file = ref('')
 
 const onFileChange = (e) => {
-    const file =  e.target.files[0];
-     url.value = URL.createObjectURL(file)
+    file.value =  e.target.files[0];
+    url.value = URL.createObjectURL(file.value)
+    postStore.$state = { image : file.value};
+    
+   console.log(postStore.image);
 }
+
    
 const deleteFileChange = () =>{
     url.value = null
+    postStore.$state = { image : null};
+
+  
 }
+
+const contentChange = () => {
+    postStore.$state = { body: content.value};
+    console.log(postStore.body);
+}
+
+
+
+const sendPost = async() => {
+
+    let myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", `Bearer ${loginStore.token} `);
+
+    let formdata = new FormData();    
+    formdata.append("image", postStore.image);
+    formdata.append("userUuid", loginStore.userUuid);
+    formdata.append("body", postStore.body);
+
+
+
+    const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    
+    };
+
+    
+    await fetch("http://localhost:5000/api/posts", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+    
+    function resetForm(){
+        content.value = null;
+        url.value = null;
+
+
+    }
+
+    resetForm()
+}
+
+
 
 
 
