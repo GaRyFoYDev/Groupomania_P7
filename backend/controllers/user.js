@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
        
         if (!user)
         {
-            return res.status(401).json({ error: "Cette utilisateur n'existe pas" })
+            return res.status(401).json({ error: "Cet utilisateur n'existe pas" })
         }
             const match = await bcrypt.compare(req.body.password, user.password);
         
@@ -65,7 +65,7 @@ exports.getOneUser = async (req, res) =>{
     try {
         
 
-        const user = await User.findOne({where: {uuid :req.params.uuid}});
+        const user = await User.findOne({where: {uuid :req.params.uuid}, attributes: ["uuid", "nom","prenom","role"]});
         return res.status(200).json(user);
         
     } catch (error) {

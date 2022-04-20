@@ -17,3 +17,18 @@ exports.createPost = async (req,res) => {
         return res.status(500).json(error)
     }
 }
+
+exports.getAllPosts = async(req, res) => {
+
+    try {
+
+        const posts = await Post.findAll({
+            attributes: ["body", "image", "createdAt"],
+            order: [["createdAt", "DESC"]],
+          });
+        return res.status(200).json(posts);
+        
+    } catch (error) {
+        return res.status(500).json({error, message: "Une erreur s'est produite"})
+    }
+}
