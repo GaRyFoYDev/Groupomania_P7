@@ -30,7 +30,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   const store = useLoginStore();
-  console.log(store.isLogged);
+  
   
 if(to.meta.requiresAuth && store.isLogged === false){
   return { name: 'login'}

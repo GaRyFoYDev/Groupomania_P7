@@ -14,14 +14,17 @@
 
 <script setup>
 import router from '../router';
-import { useLoginStore } from '../stores/login';
-const store = useLoginStore();
+import { useLoginStore} from '../stores/login';
+import {useUserStore} from '../stores/user'
+const loginStore = useLoginStore();
+const userStore = useUserStore();
 
 const logOut = async() =>{
 
-    store.$reset();
+    loginStore.$reset();
+    userStore.$reset();
     await router.push({path: '/'});
-    console.log(store);  
+   
 }
 
 

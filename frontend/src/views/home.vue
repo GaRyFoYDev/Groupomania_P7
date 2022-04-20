@@ -1,27 +1,36 @@
 <template>
 <TheHeader />
-<h2>Bienvenue {{currentUser.prenom}} </h2>
+<h2>Bienvenue {{userStore.prenom}} </h2>
 <SendPost /> 
+<AllPosts />
 </template>
 
 <script setup>
 import TheHeader from "../components/Header.vue";
 import SendPost from "../components/SendPost.vue";
-import {useLoginStore} from "@/stores/login";
-import {ref} from 'vue'
+import AllPosts from "../components/AllPosts.vue";
+import{useUserStore} from '@/stores/user';
+import{useLoginStore} from '@/stores/login';
 
-const store =useLoginStore();
+const userStore = useUserStore();
+const loginStore = useLoginStore();
 
-const API_URL = 'http://localhost:5000/api/auth/';
-const userUuid = store.userUuid;
-const currentUser = ref('')
+ async function getUser() {
+            
+            const user = await fetch('http://localhost:5000/api/auth/' + loginStore.userUuid)
+            .then((res) => res.json())
+            .then((data) => userStore.$state = {
+                uuid: data.uuid,
+                nom: data.nom,
+                prenom: data.prenom,
+                role: data.role
+            })  
+            
+      }
 
- fetch(API_URL + userUuid)
-      .then((res) => res.json())
-      .then(data => currentUser.value = data)
-      .catch(err => console.log(err.message))
+getUser()
 
-console.log(currentUser.value)
+
 
     
 
