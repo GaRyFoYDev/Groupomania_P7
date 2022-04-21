@@ -1,4 +1,4 @@
-const {User, Post}  = require('../models/')
+const {User, Post, sequelize}  = require('../models/')
 
 exports.createPost = async (req,res) => {
 
@@ -23,8 +23,8 @@ exports.getAllPosts = async(req, res) => {
     try {
 
         const posts = await Post.findAll({
-            attributes: ["body", "image", "createdAt"],
-            order: [["createdAt", "DESC"]],
+           attributes: ['body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
+           order: [["createdAt", "DESC"]],
           });
         return res.status(200).json(posts);
         
@@ -32,3 +32,6 @@ exports.getAllPosts = async(req, res) => {
         return res.status(500).json({error, message: "Une erreur s'est produite"})
     }
 }
+
+//  const invoices = await Invoice.findAll({attributes: {include: ["id","invoiceDate",[sequelize.fn("DATE_FORMAT", sequelize.col("paymentDate"),  "%d-%m-%Y %H:%i:%s"),"paymentDate",], "amount",], },});
+  
