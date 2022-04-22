@@ -15,6 +15,9 @@ module.exports = {
       body: {
         type: Sequelize.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       image: {
         type: Sequelize.STRING,

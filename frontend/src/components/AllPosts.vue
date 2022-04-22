@@ -1,5 +1,5 @@
 <template>
-<div v-for="post in allPostsStore.posts" class="post_container">
+<div  @reset="getAllPosts" v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
 
   <div class="post_header">
       <div class="post_header_img"><img src="https://media.vanityfair.fr/photos/60d36b2e9ae7c95386a6d961/1:1/w_718,h_718,c_limit/compl__tement_nu__francky_vincent_nous_offre_le_pire_statut_facebook_de_la_semaine_8250.jpeg"/></div>
@@ -9,7 +9,7 @@
       </div>
   </div>
 
-  <div class="post_image">
+  <div v-if="post.image" class="post_image">
       <img :src="post.image" alt="" >
   </div>
 
@@ -38,29 +38,30 @@
 
 
 <script setup>
+
 import { useAllPostsStore } from '../stores/allposts';
 import { useLoginStore } from '../stores/login';
+
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
 
 
+
+
 async function getAllPosts() {
 
-            const posts =await fetch('http://localhost:5000/api/posts/all', 
+             await fetch( 'http://localhost:5000/api/posts/all', 
             {headers: { "Authorization": `Bearer ${loginStore.token}`}})
             .then((res) => res.json())
             .then((data) => allPostsStore.posts = data) 
 
-            return posts      
+ 
       }
 
   getAllPosts()
 
 console.log(allPostsStore.posts);
-
-
-
 
 </script>
 
@@ -70,7 +71,7 @@ console.log(allPostsStore.posts);
 
   &_container
     {
-    width: 50%;
+    width: 40%;
     display:flex;
     flex-direction:column;
     row-gap:10px;
@@ -87,7 +88,6 @@ console.log(allPostsStore.posts);
     align-items: center;
   
     
-   // background-color: blue;
     overflow: hidden;
     
 

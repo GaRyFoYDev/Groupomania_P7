@@ -4,11 +4,11 @@ export const usePostStore = defineStore('post', {
     
     state: () => {
       return {
-        body:null,
+        body:"",
         image:null,
       }
     },
 
-   persist : true
+//  persist : true
   
     }); 

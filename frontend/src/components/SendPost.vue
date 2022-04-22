@@ -8,15 +8,16 @@
             <label class="btn" for="file">Choisir une image</label>    
         </div>
         <button v-if="url" id="delete-img" class="btn btn-primary" @click.prevent="deleteFileChange">Supprimer une image</button>
-        <button class="btn btn-primary">Publier !</button>
+        <button class="btn btn-primary" >Publier !</button>
     </div>
    
     <div id="preview">
         <img  v-if="url" :src="url" />
     </div>
 
-    
+   <p v-if="errorMessage" class="errorMessage">{{errorMessage}}</p> 
 </form>
+
    
 
 
@@ -30,20 +31,25 @@
 import {ref} from 'vue';
 import {useLoginStore} from '@/stores/login';
 import {usePostStore} from '@/stores/post';
+import { useAllPostsStore } from "../stores/allposts";
+
 
 const loginStore = useLoginStore();
 const postStore = usePostStore();
+const allPostsStore = useAllPostsStore();
 
-const content = ref('');
+const content = ref(null);
 const url = ref('');
 const file = ref('')
+const errorMessage = ref('')
+
 
 const onFileChange = (e) => {
     file.value =  e.target.files[0];
     url.value = URL.createObjectURL(file.value)
     postStore.$state = { image : file.value};
     
-   console.log(postStore.image);
+   
 }
 
    
@@ -56,7 +62,7 @@ const deleteFileChange = () =>{
 
 const contentChange = () => {
     postStore.$state = { body: content.value};
-    console.log(postStore.body);
+    
 }
 
 
@@ -81,22 +87,34 @@ const sendPost = async() => {
     
     };
 
-    
-    await fetch("http://localhost:5000/api/posts", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+    if(content.value === null ){
 
-    
-    function resetForm(){
-        content.value = null;
-        url.value = null;
+            errorMessage.value = "Votre post est vide";
 
+             setTimeout(() => {
+             errorMessage.value = null 
+          }, 4000);
+        
+        
+    }else{
+
+        await fetch("http://localhost:5000/api/posts", requestOptions)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
 
     }
 
-    resetForm()
-   
+        function resetForm(){
+        content.value = null;
+        url.value = null;
+       
+}
+     resetForm()
+    
+     allPostsStore.refreshPosts()
+    
+
 }
 
 
@@ -111,7 +129,7 @@ const sendPost = async() => {
 
 
 form{
-    width: 50%;
+    width: 40%;
     display:flex;
     flex-direction:column;
     row-gap:10px;
@@ -187,7 +205,10 @@ form{
 
  }
  
- 
+ .errorMessage{
+     color: var(--danger-1);
+     text-align: center;
+ }
 
 }
 

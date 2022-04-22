@@ -23,7 +23,7 @@ exports.getAllPosts = async(req, res) => {
     try {
 
         const posts = await Post.findAll({
-           attributes: ['body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
+           attributes: ['uuid','body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
            order: [["createdAt", "DESC"]],
           });
         return res.status(200).json(posts);

@@ -1,19 +1,23 @@
 <template>
 <TheHeader />
 <h2>Bienvenue {{userStore.prenom}} </h2>
-<SendPost /> 
+<SendPost  /> 
 <AllPosts />
 </template>
 
 <script setup>
+
 import TheHeader from "../components/Header.vue";
 import SendPost from "../components/SendPost.vue";
 import AllPosts from "../components/AllPosts.vue";
+import { useAllPostsStore } from "../stores/allposts";
 import{useUserStore} from '@/stores/user';
 import{useLoginStore} from '@/stores/login';
 
+
 const userStore = useUserStore();
 const loginStore = useLoginStore();
+const allPostsStore = useAllPostsStore();
 
  async function getUser() {
             
@@ -32,7 +36,9 @@ getUser()
 
 
 
-    
+
+
+
 
 </script>
 
