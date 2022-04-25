@@ -10,6 +10,15 @@
           <h4>{{post.user.nom}} {{post.user.prenom}}</h4>
           <p>Publié le {{post.createdAt}} </p>
       </div>
+      <div class="post_dropdown">
+        <i @click="show = !show" class="fa-solid fa-caret-down"></i>
+        </div>
+         <Transition>
+           <div class="post_menu">
+              <button class="post_menu_modifier" v-if="show" >Modifier</button>
+              <button  class="post_menu_supprimer" v-if="show" >Supprimer</button>
+           </div>
+         </Transition> 
   </div>
 
   <div v-if="post.image" class="post_image">
@@ -41,12 +50,13 @@
 
 
 <script setup>
-
+import {ref} from 'vue';
 import { useAllPostsStore } from '../stores/allposts';
 import { useLoginStore } from '../stores/login';
 
 
-
+const items = ref([{title: "modifier"}, {title: "supprimer"}]);
+const show = ref(false)
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
 
@@ -65,7 +75,7 @@ async function getAllPosts() {
 
   getAllPosts()
 
-console.log(allPostsStore.posts);
+
 
 </script>
 
@@ -84,6 +94,7 @@ console.log(allPostsStore.posts);
    
     border: 1px solid rgba(52, 73, 94, 0.2);
     border-radius: 10px;
+    position: relative;
     
     }
    
@@ -91,7 +102,7 @@ console.log(allPostsStore.posts);
     display: flex;
     align-items: center;
   
-    
+    padding: 10px;
     overflow: hidden;
     
 
@@ -179,9 +190,75 @@ console.log(allPostsStore.posts);
     
   }
  
+ &_dropdown{
+   position: absolute;
+   right: 20px;
+   top: 10px;
+   font-size: 1.5rem;
+   color: var(--primary-2);
+
+
+   
+ }
+  
+  &_menu{ 
+      
+     
+    margin: 5px 0;
+    font-size:0.80rem;
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    display: flex;
+    gap:5px;
+    flex-direction: column;
+    justify-content: flex-end;
+     
+
+        
+        &_modifier{
+          background-color: var(--success-2);
+          color: var(--text-primary-color);
+          border:none;
+          border-radius:4px;
+          font-weight:700;
+          padding: 5px;
+          cursor: pointer;
+
+           &:hover{
+             background-color: var(--success-1);
+          }
+        
+        }
+        &_supprimer{
+          background-color: var(--danger-2);
+          color: var(--text-primary-color);
+           border:none;
+          border-radius:4px;
+          font-weight:700;
+          padding: 5px;
+          cursor: pointer;
+
+          &:hover{
+             background-color: var(--danger-1);
+          }
+        }
+    }
+
+
+   
+
 
 }
 
+// .v-enter-active,
+// .v-leave-active {
+//   transition: opacity 2s ease;
+// }
 
+// .v-enter-from,
+// .v-leave-to {
+//   opacity: 0;
+// }
 
 </style>
