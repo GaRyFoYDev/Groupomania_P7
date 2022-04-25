@@ -1,10 +1,13 @@
 <template>
-<div  @reset="getAllPosts" v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
+<div  v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
 
   <div class="post_header">
-      <div class="post_header_img"><img src="https://media.vanityfair.fr/photos/60d36b2e9ae7c95386a6d961/1:1/w_718,h_718,c_limit/compl__tement_nu__francky_vincent_nous_offre_le_pire_statut_facebook_de_la_semaine_8250.jpeg"/></div>
+      <div class="post_header_img">
+        <img v-if="post.user.image !== null" :src="post.user.image" />
+        <img v-else src="../assets/images/default_profile_400x400.png"/>
+        </div>
       <div class="post_header_info">
-          <h4>Francky Vincent</h4>
+          <h4>{{post.user.nom}} {{post.user.prenom}}</h4>
           <p>Publié le {{post.createdAt}} </p>
       </div>
   </div>
@@ -41,6 +44,7 @@
 
 import { useAllPostsStore } from '../stores/allposts';
 import { useLoginStore } from '../stores/login';
+
 
 
 const loginStore = useLoginStore();

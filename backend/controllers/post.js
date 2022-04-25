@@ -21,17 +21,21 @@ exports.createPost = async (req,res) => {
 exports.getAllPosts = async(req, res) => {
 
     try {
-
+       
         const posts = await Post.findAll({
-           attributes: ['uuid','body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
-           order: [["createdAt", "DESC"]],
-          });
+           attributes: ['uuid','body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('Post.createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
+           order: [["createdAt", "DESC"]], 
+           include: [{model: User, as: 'user', attributes: ['nom', 'prenom', 'image', 'role']}]
+          }
+          );
+          
+      
         return res.status(200).json(posts);
         
     } catch (error) {
-        return res.status(500).json({error, message: "Une erreur s'est produite"})
+        return res.status(500).json({error})
     }
 }
 
-//  const invoices = await Invoice.findAll({attributes: {include: ["id","invoiceDate",[sequelize.fn("DATE_FORMAT", sequelize.col("paymentDate"),  "%d-%m-%Y %H:%i:%s"),"paymentDate",], "amount",], },});
+
   
