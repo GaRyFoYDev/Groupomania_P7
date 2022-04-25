@@ -1,4 +1,5 @@
-const {User, Post, sequelize}  = require('../models/')
+const {User, Post, sequelize}  = require('../models/');
+const fs = require("fs");
 
 exports.createPost = async (req,res) => {
 
@@ -25,7 +26,7 @@ exports.getAllPosts = async(req, res) => {
         const posts = await Post.findAll({
            attributes: ['uuid','body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('Post.createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
            order: [["createdAt", "DESC"]], 
-           include: [{model: User, as: 'user', attributes: ['nom', 'prenom', 'image', 'role']}]
+           include: [{model: User, as: 'user', attributes: ['uuid','nom', 'prenom', 'image', 'role']}]
           }
           );
           
@@ -34,6 +35,34 @@ exports.getAllPosts = async(req, res) => {
         
     } catch (error) {
         return res.status(500).json({error})
+    }
+}
+
+exports.deletePost = async(req, res) => {
+    const {postUuid, userUuid} = req.body
+   
+    try {
+        const post = await Post.findOne({where: {uuid: postUuid}})
+
+        if(!post){
+            return res.status(400).json({message: "Aucun post trouvé !"});
+        }else{
+            const user = await User.findOne({where: {uuid : userUuid}})
+
+            if(userUuid === user.uuid || user.role === admin){
+
+                 const file = post.image.split("/images/")[1];
+                 fs.unlink(`images/${file}`, () => {
+                     Post.destroy({where: {uuid : postUuid}});
+                    });
+
+                return res.status(200).json({message: "Post supprimé !"})
+
+            } 
+        }
+
+    } catch (error) {
+        return res.status(500).json(error)
     }
 }
 

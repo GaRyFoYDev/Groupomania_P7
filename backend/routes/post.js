@@ -10,6 +10,7 @@ const postCtrl = require('../controllers/post');
 // Création des routes utilisateurs
 router.post('/', auth, multer, postCtrl.createPost );
 router.get('/all', auth,postCtrl.getAllPosts );
+router.delete('/',auth, postCtrl.deletePost );
 
 
 module.exports = router;
