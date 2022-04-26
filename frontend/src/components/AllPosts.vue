@@ -1,5 +1,5 @@
 <template>
-<div  v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
+<div :id="post.uuid" v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
 
   <div class="post_header">
       <div class="post_header_img">
@@ -10,15 +10,12 @@
           <h4>{{post.user.nom}} {{post.user.prenom}}</h4>
           <p>Publié le {{post.createdAt}} </p>
       </div>
-      <div class="post_dropdown">
-        <i @click="show = !show" class="fa-solid fa-caret-down"></i>
-        </div>
-         <Transition>
-           <div class="post_menu">
-              <button class="post_menu_modifier" v-if="show" >Modifier</button>
-              <button  class="post_menu_supprimer" v-if="show" >Supprimer</button>
+      <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
+           <div  class="post_menu">
+              <button  class="post_menu_modifier"  ><i class="fa-regular fa-pen-to-square"></i></button>
+              <button @click="deletePost" class="post_menu_supprimer" ><i :deleteId="post.uuid" class="fa-regular fa-trash-can"></i></button>
            </div>
-         </Transition> 
+         </div>
   </div>
 
   <div v-if="post.image" class="post_image">
@@ -50,15 +47,16 @@
 
 
 <script setup>
-import {ref} from 'vue';
 import { useAllPostsStore } from '../stores/allposts';
 import { useLoginStore } from '../stores/login';
+import { useUserStore } from '../stores/user';
+import loginFormVue from './loginForm.vue';
 
 
-const items = ref([{title: "modifier"}, {title: "supprimer"}]);
-const show = ref(false)
+
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
+const userStore = useUserStore();
 
 
 
@@ -73,7 +71,28 @@ async function getAllPosts() {
  
       }
 
-  getAllPosts()
+  getAllPosts();
+
+
+
+
+async function deletePost(){
+    const deleteId = event.target.getAttribute('deleteId');
+    console.log(deleteId);
+
+    await fetch('http://localhost:5000/api/posts/' + deleteId, {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${loginStore.token} `
+      },
+      body: JSON.stringify({'userUuid': userStore.uuid}),
+      
+    })
+    .then((res) => res.json());
+
+    allPostsStore.refreshPosts()
+}
 
 
 
@@ -210,14 +229,12 @@ async function getAllPosts() {
     right: 10px;
     top: 40px;
     display: flex;
-    gap:5px;
-    flex-direction: column;
-    justify-content: flex-end;
-     
+    gap:10px;
+    
 
         
         &_modifier{
-          background-color: var(--success-2);
+          background-color:#8e44ad;
           color: var(--text-primary-color);
           border:none;
           border-radius:4px;
@@ -226,7 +243,7 @@ async function getAllPosts() {
           cursor: pointer;
 
            &:hover{
-             background-color: var(--success-1);
+             background-color:#9b59b6;
           }
         
         }

@@ -38,19 +38,35 @@ exports.getAllPosts = async(req, res) => {
     }
 }
 
+
+exports.getOnePost = async (req, res) =>{
+    try {
+        
+
+        const user = await Post.findOne({where: {uuid :req.params.uuid}});
+        return res.status(200).json(user);
+        
+    } catch (error) {
+        
+        return res.status(500).json(error)
+    }
+    
+}
+
 exports.deletePost = async(req, res) => {
-    const {postUuid, userUuid} = req.body
+    const {userUuid} = req.body
+    const postUuid = req.params.uuid
    
     try {
         const post = await Post.findOne({where: {uuid: postUuid}})
 
         if(!post){
             return res.status(400).json({message: "Aucun post trouvé !"});
-        }else{
-            const user = await User.findOne({where: {uuid : userUuid}})
+        }
+        else{
+              const user = await User.findOne({where: {uuid : userUuid}})
 
-            if(userUuid === user.uuid || user.role === admin){
-
+                if(user.id  === post.userId || user.role === 'admin'){
                  const file = post.image.split("/images/")[1];
                  fs.unlink(`images/${file}`, () => {
                      Post.destroy({where: {uuid : postUuid}});
@@ -58,10 +74,16 @@ exports.deletePost = async(req, res) => {
 
                 return res.status(200).json({message: "Post supprimé !"})
 
-            } 
-        }
-
-    } catch (error) {
+                 }else{
+                    return res.status(403).json({message: 'Accès refusé'})
+                }
+        
+             }
+        
+             
+                 
+             
+    }catch (error) {
         return res.status(500).json(error)
     }
 }

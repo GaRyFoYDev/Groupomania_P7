@@ -8,12 +8,12 @@ module.exports = (req, res, next) => {
     const userUuid = decodedToken.userUuid;
 
     // Vérification de la concordance entre les clés utilisateurs
-    if (req.body.userUuid && req.body.userUuid !== userUuid) {
+    if (req.body.userUuid && req.body.userUuid !== userUuid ) {
       throw 'User ID non valable !';
     } else {
       next();
     }
   } catch (error) {
-    res.status(403).json(error);
+    res.status(401).json(error);
   }
 };
