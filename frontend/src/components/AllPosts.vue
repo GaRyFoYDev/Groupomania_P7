@@ -12,7 +12,7 @@
       </div>
       <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
            <div  class="post_menu">
-              <button  class="post_menu_modifier"  ><i class="fa-regular fa-pen-to-square"></i></button>
+              <button @click="open = true" class="post_menu_modifier"  ><i :updateId="post.uuid" class="fa-regular fa-pen-to-square"></i></button>
               <button @click="deletePost" class="post_menu_supprimer" ><i :deleteId="post.uuid" class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
@@ -41,23 +41,45 @@
 
 </div>
  
-   
+
+<Teleport to="body">
+  <div v-if="open" class="modal">
+    
+      <form @submit.prevent="sendPost" enctype="multipart/form-data">
+          
+          <input v-model="content" id="publication" type="text" placeholder="Quoi de neuf ?" @change="contentChange">
+          <div id="send">
+              <div id="btn-wrapper">
+                  <input type="file" name="file" id="file" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="onFileChange"/>
+                  <label class="btn" for="file">Modifier l'image</label>    
+              </div>
+              <button v-if="url" id="delete-img" class="btn btn-primary" @click.prevent="deleteFileChange">Supprimer une image</button>
+              <button class="btn btn-primary" >Actualiser !</button>
+          </div>
+          
+      
+          <p v-if="errorMessage" class="errorMessage">{{errorMessage}}</p> 
+          <button @click="open = false" class="btn btn-primary">Fermer</button>
+      </form>
+      
+  
+  </div>
+</Teleport>
 
 </template>
 
 
 <script setup>
+import { ref } from 'vue'
 import { useAllPostsStore } from '../stores/allposts';
 import { useLoginStore } from '../stores/login';
 import { useUserStore } from '../stores/user';
-import loginFormVue from './loginForm.vue';
-
 
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
 const userStore = useUserStore();
-
+const open = ref(false)
 
 
 
@@ -92,6 +114,25 @@ async function deletePost(){
     .then((res) => res.json());
 
     allPostsStore.refreshPosts()
+}
+
+
+async function updatePost(){
+    const updateId = event.target.getAttribute('updateId');
+    console.log(updateId);
+
+    // await fetch('http://localhost:5000/api/posts/' + deleteId, {
+    //   method: 'UPDATE',
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": `Bearer ${loginStore.token} `
+    //   },
+    //   body: JSON.stringify({'userUuid': userStore.uuid}),
+      
+    // })
+    // .then((res) => res.json());
+
+    // allPostsStore.refreshPosts()
 }
 
 
@@ -268,14 +309,19 @@ async function deletePost(){
 
 }
 
-// .v-enter-active,
-// .v-leave-active {
-//   transition: opacity 2s ease;
-// }
+.modal {
+  position: fixed;
+  z-index: 999;
+  background-color: rgb(0, 0,0, 0.3);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-// .v-enter-from,
-// .v-leave-to {
-//   opacity: 0;
-// }
+  
+}
 
 </style>

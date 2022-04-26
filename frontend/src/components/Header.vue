@@ -31,7 +31,7 @@ const logOut = async() =>{
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 nav{
     display: flex;
