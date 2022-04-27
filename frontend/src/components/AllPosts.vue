@@ -12,8 +12,8 @@
       </div>
       <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
            <div  class="post_menu">
-              <button @click="open = true" class="post_menu_modifier"  ><i :updateId="post.uuid" class="fa-regular fa-pen-to-square"></i></button>
-              <button @click="deletePost" class="post_menu_supprimer" ><i :deleteId="post.uuid" class="fa-regular fa-trash-can"></i></button>
+              <button  v-if="post.user.uuid === userStore.uuid" @click="open" class="post_menu_modifier"  ><i @click="updateId = post.uuid" class="fa-regular fa-pen-to-square"></i></button>
+              <button @click="deletePost" class="post_menu_supprimer" ><i @click="deleteId = post.uuid" class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
   </div>
@@ -43,23 +43,23 @@
  
 
 <Teleport to="body">
-  <div v-if="open" class="modal">
+  <div v-if="openModal" class="modal">
     
-      <form @submit.prevent="sendPost" enctype="multipart/form-data">
+      <form @submit.prevent="updatePost" enctype="multipart/form-data">
           
-          <input v-model="content" id="publication" type="text" placeholder="Quoi de neuf ?" @change="contentChange">
+          <div v-if="updateImage" class="modal_image" ><img :src="updateImage" ></div>
+          <input v-model="updateContent" id="publication" type="text" @change="updateBody">
+          <p v-if="errorUpdate" class="errorMessage">{{errorUpdate}}</p> 
           <div id="send">
               <div id="btn-wrapper">
-                  <input type="file" name="file" id="file" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="onFileChange"/>
-                  <label class="btn" for="file">Modifier l'image</label>    
+                  <input type="file" id="updateImg" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="updateImg"/>
+                  <label class="btn" for="updateImg">Modifier image</label>    
               </div>
-              <button v-if="url" id="delete-img" class="btn btn-primary" @click.prevent="deleteFileChange">Supprimer une image</button>
+             
               <button class="btn btn-primary" >Actualiser !</button>
           </div>
-          
-      
-          <p v-if="errorMessage" class="errorMessage">{{errorMessage}}</p> 
-          <button @click="open = false" class="btn btn-primary">Fermer</button>
+         
+         <button  @click="openModal = false" class="btn modal_button_close">Fermer</button>
       </form>
       
   
@@ -71,15 +71,26 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useAllPostsStore } from '../stores/allposts';
+import { useAllPostsStore } from '../stores/allPosts';
 import { useLoginStore } from '../stores/login';
 import { useUserStore } from '../stores/user';
-
+import { useGetOnePostStore } from '../stores/getOnePost';
+import {useUpdatePostStore} from '../stores/updatePost';
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
 const userStore = useUserStore();
-const open = ref(false)
+const getOnePost = useGetOnePostStore();
+const updatePostStore = useUpdatePostStore();
+
+const openModal = ref(false)
+const deleteId = ref('')
+const updateId = ref('')
+const updateContent = ref('')
+const updateImage = ref('')
+const imgFile =ref('')
+const errorUpdate = ref('')
+
 
 
 
@@ -99,10 +110,10 @@ async function getAllPosts() {
 
 
 async function deletePost(){
-    const deleteId = event.target.getAttribute('deleteId');
+   
     console.log(deleteId);
 
-    await fetch('http://localhost:5000/api/posts/' + deleteId, {
+    await fetch('http://localhost:5000/api/posts/' + deleteId.value, {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
@@ -116,24 +127,86 @@ async function deletePost(){
     allPostsStore.refreshPosts()
 }
 
+async function open() {
 
-async function updatePost(){
-    const updateId = event.target.getAttribute('updateId');
-    console.log(updateId);
+  
 
-    // await fetch('http://localhost:5000/api/posts/' + deleteId, {
-    //   method: 'UPDATE',
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Authorization": `Bearer ${loginStore.token} `
-    //   },
-    //   body: JSON.stringify({'userUuid': userStore.uuid}),
-      
-    // })
-    // .then((res) => res.json());
+    await fetch( 'http://localhost:5000/api/posts/' + updateId.value, 
+        {headers: { "Authorization": `Bearer ${loginStore.token}`}})
+        .then((res) => res.json())
+        .then((data) => {getOnePost.$state = { body: data.body, image: data.image} })
 
-    // allPostsStore.refreshPosts()
+    updateContent.value = getOnePost.body
+    updateImage.value = getOnePost.image
+    openModal.value = true;
+    
+    
 }
+
+const updateImg = (e) => {
+    
+    imgFile.value =  e.target.files[0];
+    updateImage.value = URL.createObjectURL(imgFile.value);
+    updatePostStore.$state = { image: imgFile}
+    
+   
+}
+
+const updateBody= () => {
+    updatePostStore.$state = { body: updateContent.value};
+    
+}
+
+
+
+async function updatePost() {
+
+    let myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", `Bearer ${loginStore.token} `);
+
+    let formdata = new FormData();    
+    formdata.append("image", updatePostStore.image);
+    formdata.append("userUuid", userStore.uuid);
+    formdata.append("body", updatePostStore.body);
+
+   
+
+
+    const requestOptions = {
+    method: 'PUT',
+    headers: myHeaders,
+    body: formdata,
+    
+    };
+    
+    if(updateContent.value === '' ){
+
+            errorUpdate.value = "Votre publication est vide";
+
+             setTimeout(() => {
+             errorUpdate.value = null 
+          }, 3000);
+        
+        
+    }else{
+
+        await fetch("http://localhost:5000/api/posts/" + updateId.value, requestOptions)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+
+            
+            allPostsStore.refreshPosts()
+            openModal.value = false;
+    }
+
+       
+}
+    
+
+
+
 
 
 
@@ -162,17 +235,9 @@ async function updatePost(){
     display: flex;
     align-items: center;
   
-    padding: 10px;
-    overflow: hidden;
-    
-
     &_img{
      width: 15%;
-    
-    
-    
-    
-
+  
       img{
       
       width: 80%;
@@ -197,9 +262,6 @@ async function updatePost(){
       }
 
     }
-
-
-
 
 
   }
@@ -241,46 +303,36 @@ async function updatePost(){
 
           &:active {
             color:  rgba(52, 73, 94, 1) ;
-          }
+           }
         }
-      
-
-     
-    }
+     }
     
   }
  
  &_dropdown{
    position: absolute;
    right: 20px;
-   top: 10px;
-   font-size: 1.5rem;
-   color: var(--primary-2);
-
-
+   top: 20px;
+   
    
  }
   
   &_menu{ 
       
      
-    margin: 5px 0;
-    font-size:0.80rem;
-    position: absolute;
-    right: 10px;
-    top: 40px;
+   
+    //font-size: 2rem;
     display: flex;
     gap:10px;
     
-
-        
         &_modifier{
           background-color:#8e44ad;
           color: var(--text-primary-color);
           border:none;
           border-radius:4px;
           font-weight:700;
-          padding: 5px;
+          font-size: 1.2rem;
+          padding: 3px;
           cursor: pointer;
 
            &:hover{
@@ -291,10 +343,11 @@ async function updatePost(){
         &_supprimer{
           background-color: var(--danger-2);
           color: var(--text-primary-color);
+          font-size: 1.2rem;
            border:none;
           border-radius:4px;
           font-weight:700;
-          padding: 5px;
+          padding: 3px;
           cursor: pointer;
 
           &:hover{
@@ -310,18 +363,37 @@ async function updatePost(){
 }
 
 .modal {
-  position: fixed;
-  z-index: 999;
-  background-color: rgb(0, 0,0, 0.3);
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: fixed;
+    z-index: 999;
+    background-color: rgb(0, 0,0, 0.7);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
 
+  &_image{
+     img{
+       width: 100%;
+       height : 30vh;
+     }
+  }
+
+
+    &_button_close{
+      width: 25%;
+      margin: 10px auto 0;
+      background-color: var(--danger-2);
+      color: var(--text-primary-color);
+    &:hover {
+      background-color: var(--danger-1);
+    }
+  }
   
-}
+  
+    }
+
 
 </style>

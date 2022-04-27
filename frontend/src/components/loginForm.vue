@@ -24,7 +24,7 @@ import router from '../router';
 import {ref} from 'vue';
 import {useLoginStore} from '@/stores/login';
 
-const store = useLoginStore();
+const loginStore = useLoginStore();
 
 
 const API_URL = 'http://localhost:5000/api/auth/';
@@ -43,7 +43,7 @@ const mySubmit = handleSubmit(async(data, {resetForm}) =>{
         
         if(res.userUuid && res.token){
             
-         store.$state = {
+         loginStore.$state = {
              userUuid : res.userUuid,
              token : res.token, 
              isLogged : true 

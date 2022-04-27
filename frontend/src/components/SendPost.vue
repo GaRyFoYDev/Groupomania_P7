@@ -2,6 +2,7 @@
 <form @submit.prevent="sendPost" enctype="multipart/form-data">
     <h3>Exprimez-vous ...</h3>
     <input v-model="content" id="publication" type="text" placeholder="Quoi de neuf ?" @change="contentChange">
+      <p v-if="errorMessage" class="errorMessage">{{errorMessage}}</p> 
     <div id="send">
         <div id="btn-wrapper">
             <input type="file" name="file" id="file" class="inputfile" accept=".jpg, .jpeg, .png, .gif" @change="onFileChange"/>
@@ -15,7 +16,7 @@
         <img  v-if="url" :src="url" />
     </div>
 
-   <p v-if="errorMessage" class="errorMessage">{{errorMessage}}</p> 
+ 
 </form>
 
    
@@ -30,8 +31,8 @@
 
 import {ref} from 'vue';
 import {useLoginStore} from '@/stores/login';
-import {usePostStore} from '@/stores/post';
-import { useAllPostsStore } from "../stores/allposts";
+import {usePostStore} from '@/stores/sendPost';
+import { useAllPostsStore } from "../stores/allPosts";
 
 
 const loginStore = useLoginStore();
@@ -44,12 +45,11 @@ const file = ref('')
 const errorMessage = ref('')
 
 
-const onFileChange = (e) => {
+const onFileChange = async(e) => {
     file.value =  e.target.files[0];
-    url.value = URL.createObjectURL(file.value)
-    postStore.$state = { image : file.value};
-    
-   
+    url.value = URL.createObjectURL(file.value);
+    postStore.$state = {image: file}
+    console.log(url.value);
 }
 
    
@@ -89,11 +89,11 @@ const sendPost = async() => {
 
     if(content.value === null ){
 
-            errorMessage.value = "Votre post est vide";
+            errorMessage.value = "Votre publication est vide";
 
              setTimeout(() => {
              errorMessage.value = null 
-          }, 4000);
+          }, 3000);
         
         
     }else{
@@ -103,16 +103,16 @@ const sendPost = async() => {
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
 
+            function resetForm(){
+            content.value = null;
+            url.value = null;
     }
 
-        function resetForm(){
-        content.value = null;
-        url.value = null;
+        resetForm()
+        
+        allPostsStore.refreshPosts()
        
 }
-     resetForm()
-    
-     allPostsStore.refreshPosts()
     
 
 }
@@ -124,7 +124,7 @@ const sendPost = async() => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 
 
 
@@ -208,6 +208,7 @@ form{
  .errorMessage{
      color: var(--danger-1);
      text-align: center;
+     font-size: 0.875rem
  }
 
 }

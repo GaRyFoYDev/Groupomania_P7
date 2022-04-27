@@ -42,9 +42,13 @@ exports.getAllPosts = async(req, res) => {
 exports.getOnePost = async (req, res) =>{
     try {
         
+        const post = await Post.findOne({where: {uuid :req.params.uuid}});
+        
 
-        const user = await Post.findOne({where: {uuid :req.params.uuid}});
-        return res.status(200).json(user);
+        if(!post){
+            return res.status(400).json({message: "Aucune publication trouvée"})
+        }
+        return res.status(200).json(post);
         
     } catch (error) {
         
@@ -61,7 +65,7 @@ exports.deletePost = async(req, res) => {
         const post = await Post.findOne({where: {uuid: postUuid}})
 
         if(!post){
-            return res.status(400).json({message: "Aucun post trouvé !"});
+            return res.status(400).json({message: "Aucune publication trouvée !"});
         }
         else{
               const user = await User.findOne({where: {uuid : userUuid}})
@@ -72,7 +76,7 @@ exports.deletePost = async(req, res) => {
                      Post.destroy({where: {uuid : postUuid}});
                     });
 
-                return res.status(200).json({message: "Post supprimé !"})
+                return res.status(200).json({message: "Publication supprimée avec succès !"})
 
                  }else{
                     return res.status(403).json({message: 'Accès refusé'})
@@ -87,6 +91,49 @@ exports.deletePost = async(req, res) => {
         return res.status(500).json(error)
     }
 }
+
+exports.updatePost = async(req, res) => {
+
+    const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
+    
+    const {userUuid, body} = req.body;
+    const postUuid = req.params.uuid
+   
+    try {
+
+        const post = await Post.findOne({where: {uuid: postUuid}})
+
+        if(!post){
+            return res.status(400).json({message: "Aucune publication trouvée !"});
+        } else{
+
+            if(!body){
+                throw `Votre publication n'est pas conforme`
+
+            }else{
+
+                const user = await User.findOne({where: {uuid : userUuid}})
+    
+                  if(user.id  === post.userId){
+                  
+                  await Post.update({ body, image}, {where: {uuid : postUuid}});
+                  
+                  return res.status(200).json({message: "Publication modifiée avec succès !"})
+    
+                   }else{
+                      return res.status(403).json({message: 'Accès refusé'})
+                  }
+            }
+      
+           }
+    
+        
+
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
 
 
   
