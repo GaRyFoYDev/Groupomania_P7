@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({User, Post}) {
       // define association here
-      this.belongsTo(Post, {foreignKey: 'postId', as: 'post'})
-      this.belongsTo(User, {foreignKey: 'userId', as: 'user'})
+      this.belongsTo(Post, {foreignKey: {name:'postId', allowNull: false} , as: 'post'}  )
+      this.belongsTo(User, {foreignKey:{name: 'userId', allowNull:'false'} , as: 'user'})
     }
     
     toJSON(){
-      return {...this.get(), id: undefined}
-    }
+      return {...this.get(), id: undefined, userId: undefined, postId: undefined}
+     }
   }
   Comment.init({
     uuid :{

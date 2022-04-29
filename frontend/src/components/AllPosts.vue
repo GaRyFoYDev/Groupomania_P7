@@ -28,14 +28,9 @@
 
   <div class="post_likes">
       <div class="post_likes_up">
-          <i class="fa-solid fa-thumbs-up"></i>
-          <p>0</p>
-      </div>
-      <div class="post_likes_down">
-          <i class="fa-solid fa-thumbs-down"></i>
-          <p>0</p>
-      </div>
-      
+          <i class="fa-solid fa-thumbs-up" @click="like " :class="{active: isLike, normal: isNormal}"></i>
+          <p>{{post.likes}}</p>
+      </div>  
     </div>
   <div class="post_comments"></div>
 
@@ -90,22 +85,12 @@ const updateContent = ref('')
 const updateImage = ref('')
 const imgFile =ref('')
 const errorUpdate = ref('')
+const isLike = ref(false)
+const isNormal = ref(true)
 
 
 
-
-async function getAllPosts() {
-
-             await fetch( 'http://localhost:5000/api/posts/all', 
-            {headers: { "Authorization": `Bearer ${loginStore.token}`}})
-            .then((res) => res.json())
-            .then((data) => allPostsStore.posts = data) 
-
- 
-      }
-
-  getAllPosts();
-
+ allPostsStore.refreshPosts();
 
 
 
@@ -157,8 +142,6 @@ const updateBody= () => {
     
 }
 
-
-
 async function updatePost() {
 
     let myHeaders = new Headers();
@@ -204,8 +187,11 @@ async function updatePost() {
        
 }
     
-
-
+async function like() {
+      isLike.value = true;
+      isNormal.value = false;
+     
+}
 
 
 
@@ -298,13 +284,7 @@ async function updatePost() {
       display: flex;
       gap:10px;
       
-        i{
-          color: rgba(52, 73, 94, 0.5);
-
-          &:active {
-            color:  rgba(52, 73, 94, 1) ;
-           }
-        }
+       
      }
     
   }
@@ -361,6 +341,14 @@ async function updatePost() {
 
 
 }
+
+ .active {
+            color:  rgba(52, 73, 94, 1) ;
+           }
+  .normal{
+          color: rgba(52, 73, 94, 0.5);
+
+        }
 
 .modal {
     position: fixed;

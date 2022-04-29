@@ -8,21 +8,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      isLike: {
-        type: Sequelize.INTEGER,
-        allowNull: false,   
-      },
-      isDislike: {
-        type: Sequelize.INTEGER,
-        allowNull: false,    
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onDelete: 'CASCADE'
       },
       postId: {
         type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: "posts",
+          key: "id",
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

@@ -6,11 +6,12 @@ exports.createPost = async (req,res) => {
     const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
     
     const {userUuid, body} = req.body;
+    const likes = 0;
    
     try {
 
         const user = await User.findOne({where: {uuid: userUuid}})
-        const post = await Post.create({body, image, userId : user.id})
+        const post = await Post.create({body,image,likes, userId : user.id})
     
         return res.status(201).json(post)
 
@@ -24,7 +25,7 @@ exports.getAllPosts = async(req, res) => {
     try {
        
         const posts = await Post.findAll({
-           attributes: ['uuid','body', 'image', [sequelize.fn('DATE_FORMAT', sequelize.col('Post.createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
+           attributes: ['uuid','body', 'image','likes', [sequelize.fn('DATE_FORMAT', sequelize.col('Post.createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
            order: [["createdAt", "DESC"]], 
            include: [{model: User, as: 'user', attributes: ['uuid','nom', 'prenom', 'image', 'role']}]
           }
@@ -104,7 +105,7 @@ exports.updatePost = async(req, res) => {
         const post = await Post.findOne({where: {uuid: postUuid}})
 
         if(!post){
-            return res.status(400).json({message: "Aucune publication trouvée !"});
+            return res.status(404).json({message: "Aucune publication trouvée !"});
         } else{
 
             if(!body){

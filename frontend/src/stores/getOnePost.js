@@ -6,6 +6,7 @@ export const useGetOnePostStore = defineStore('onePost', {
       return {
        body: null,
        image: null,
+       likes: null
       }
     },
 

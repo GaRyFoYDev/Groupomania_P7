@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate({User, Like,Comment}) {
       // define association here
       this.belongsTo(User, {foreignKey: 'userId', as: 'user'} );
-      this.hasMany(Like, {foreignKey: 'postId'});
+      this.hasMany(Like, {foreignKey: 'postId', });
       this.hasMany(Comment, {foreignKey: 'postId'});
 
     }
     toJSON(){
-     return {...this.get(), id: undefined, userId: undefined, postId: undefined}
+     return {...this.get(), id: undefined, userId: undefined}
     }
   }
   Post.init({
@@ -35,7 +35,11 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    likes: {
+      type: DataTypes.INTEGER,
+      allowNull: false,   
+    },
   }, {
     sequelize,
     tableName: 'posts',
