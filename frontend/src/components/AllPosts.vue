@@ -27,8 +27,9 @@
   </div>
 
   <div class="post_likes">
-      <div class="post_likes_up">
-          <i class="fa-solid fa-thumbs-up" @click="like " :class="{active: isLike, normal: isNormal}"></i>
+      <div class="post_likes_up" @click="changeColor" >
+          <i class="fa-solid fa-thumbs-up" @click="like"  @mouseover="likeId = post.uuid"></i>
+        
           <p>{{post.likes}}</p>
       </div>  
     </div>
@@ -81,12 +82,12 @@ const updatePostStore = useUpdatePostStore();
 const openModal = ref(false)
 const deleteId = ref('')
 const updateId = ref('')
+const likeId = ref('')
 const updateContent = ref('')
 const updateImage = ref('')
 const imgFile =ref('')
 const errorUpdate = ref('')
-const isLike = ref(false)
-const isNormal = ref(true)
+const likeData = ref(null)
 
 
 
@@ -188,12 +189,37 @@ async function updatePost() {
 }
     
 async function like() {
-      isLike.value = true;
-      isNormal.value = false;
+  
+
+    await fetch('http://localhost:5000/api/posts/like/' + likeId.value, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${loginStore.token} `
+      },
+      body: JSON.stringify({'userUuid': userStore.uuid}),
+      
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        if(data.postUpdatelike){
+          likeData.value = true
+        }else{
+          likeData.value = false
+        }
+        //console.log(likeData.value);
+    });
+
+    
+    allPostsStore.refreshPosts()
      
 }
 
-
+function changeColor(e){
+    var target = e.target;
+   target.style.color = likeData.value === false ? " rgba(52, 73, 94, 1)" : 'rgba(52, 73, 94, 0.5)';
+ 
+     }
 
 
 </script>
@@ -280,9 +306,15 @@ async function like() {
     
    
 
-    &_up, &_down{
+    &_up{
       display: flex;
       gap:10px;
+
+      i{
+        color: rgba(52, 73, 94, 0.5);
+        cursor: pointer;
+      }
+
       
        
      }
@@ -341,14 +373,7 @@ async function like() {
 
 
 }
-
- .active {
-            color:  rgba(52, 73, 94, 1) ;
-           }
-  .normal{
-          color: rgba(52, 73, 94, 0.5);
-
-        }
+ 
 
 .modal {
     position: fixed;
