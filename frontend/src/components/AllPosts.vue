@@ -27,8 +27,8 @@
   </div>
 
   <div class="post_likes">
-      <div class="post_likes_up" @click="changeColor" >
-          <i class="fa-solid fa-thumbs-up" @click="like"  @mouseover="likeId = post.uuid"></i>
+      <div class="post_likes_up"  >
+        <button @click="changeColor"> <i class="fa-solid fa-thumbs-up" @click="like"  @mouseover="likeId = post.uuid"></i></button> 
         
           <p>{{post.likes}}</p>
       </div>  
@@ -41,7 +41,7 @@
 <Teleport to="body">
   <div v-if="openModal" class="modal">
     
-      <form @submit.prevent="updatePost" enctype="multipart/form-data">
+      <form @submit.prevent="updateBody; updateImg; updatePost();" enctype="multipart/form-data">
           
           <div v-if="updateImage" class="modal_image" ><img :src="updateImage" ></div>
           <input v-model="updateContent" id="publication" type="text" @change="updateBody">
@@ -87,7 +87,7 @@ const updateContent = ref('')
 const updateImage = ref('')
 const imgFile =ref('')
 const errorUpdate = ref('')
-const likeData = ref(null)
+const likeData = ref(false)
 
 
 
@@ -138,8 +138,11 @@ const updateImg = (e) => {
    
 }
 
-const updateBody= () => {
+const updateBody= async() => {
     updatePostStore.$state = { body: updateContent.value};
+    if(updatePostStore.body == null){
+       updatePostStore.$state = {body: getOnePost.body}
+    }
     
 }
 
@@ -164,7 +167,7 @@ async function updatePost() {
     
     };
     
-    if(updateContent.value === '' ){
+    if(updateContent.value === ''  ){
 
             errorUpdate.value = "Votre publication est vide";
 
@@ -204,6 +207,8 @@ async function like() {
     .then((data) => {
         if(data.postUpdatelike){
           likeData.value = true
+        }else if(data.postUpdateDislike){
+          likeData.value = false
         }else{
           likeData.value = false
         }
@@ -215,8 +220,8 @@ async function like() {
      
 }
 
-function changeColor(e){
-    var target = e.target;
+ function changeColor(e){
+    let target = e.target;
    target.style.color = likeData.value === false ? " rgba(52, 73, 94, 1)" : 'rgba(52, 73, 94, 0.5)';
  
      }
@@ -309,10 +314,14 @@ function changeColor(e){
     &_up{
       display: flex;
       gap:10px;
+      align-items: center;
 
       i{
         color: rgba(52, 73, 94, 0.5);
         cursor: pointer;
+        font-size: 1.1rem;
+        padding: 2px;
+       
       }
 
       

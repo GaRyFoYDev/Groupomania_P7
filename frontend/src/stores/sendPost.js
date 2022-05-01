@@ -10,6 +10,6 @@ export const usePostStore = defineStore('post', {
       }
     },
 
-persist : true
+//persist : true
   
     }); 
