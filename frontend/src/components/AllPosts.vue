@@ -41,7 +41,7 @@
 <Teleport to="body">
   <div v-if="openModal" class="modal">
     
-      <form @submit.prevent="updateBody; updateImg; updatePost();" enctype="multipart/form-data">
+      <form @submit.prevent="updateBody; updateImg;updatePost();" enctype="multipart/form-data">
           
           <div v-if="updateImage" class="modal_image" ><img :src="updateImage" ></div>
           <input v-model="updateContent" id="publication" type="text" @change="updateBody">
@@ -122,8 +122,11 @@ async function open() {
         .then((res) => res.json())
         .then((data) => {getOnePost.$state = { body: data.body, image: data.image} })
 
+   
     updateContent.value = getOnePost.body
     updateImage.value = getOnePost.image
+    updatePostStore.$state = {body: getOnePost.body}
+    updatePostStore.$state = {image: getOnePost.image}
     openModal.value = true;
     
     
@@ -132,15 +135,21 @@ async function open() {
 const updateImg = (e) => {
     
     imgFile.value =  e.target.files[0];
+    console.log(imgFile.value);
     updateImage.value = URL.createObjectURL(imgFile.value);
-    updatePostStore.$state = { image: imgFile}
+    updatePostStore.$state = { image: imgFile.value}
+    //   if(updatePostStore.image == null){
+    //    updatePostStore.$state = {body: getOnePost.image}
+    // }
+
     
    
 }
 
 const updateBody= async() => {
-    updatePostStore.$state = { body: updateContent.value};
-    if(updatePostStore.body == null){
+  updatePostStore.$state = { body: updateContent.value};
+  console.log(updatePostStore.body);
+    if(updatePostStore.body == null || ''){
        updatePostStore.$state = {body: getOnePost.body}
     }
     
@@ -184,7 +193,7 @@ async function updatePost() {
             .catch(error => console.log('error', error));
 
             
-            allPostsStore.refreshPosts()
+          allPostsStore.refreshPosts()
             openModal.value = false;
     }
 

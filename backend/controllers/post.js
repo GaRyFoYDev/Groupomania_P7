@@ -95,7 +95,7 @@ exports.deletePost = async(req, res) => {
 
 exports.updatePost = async(req, res) => {
 
-    const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
+    const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.image;
     
     const {userUuid, body} = req.body;
     const postUuid = req.params.uuid
@@ -118,7 +118,7 @@ exports.updatePost = async(req, res) => {
                   if(user.id  === post.userId){
                   
                   await Post.update({ body, image}, {where: {uuid : postUuid}});
-                  
+                
                   return res.status(200).json({message: "Publication modifiée avec succès !"})
     
                    }else{
