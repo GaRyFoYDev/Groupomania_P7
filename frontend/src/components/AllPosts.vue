@@ -33,9 +33,16 @@
           <p>{{post.likes}}</p>
       </div>  
     </div>
-  <div class="post_comments"></div>
+  <div class="post_comments">
+      <div class="post_comments_send">
+          <label for="comment">Laissez votre commentaire</label>
+          <input id="comment" type="text">
+      </div>
+
+  </div>
 
 </div>
+
  
 
 <Teleport to="body">
@@ -72,6 +79,7 @@ import { useLoginStore } from '../stores/login';
 import { useUserStore } from '../stores/user';
 import { useGetOnePostStore } from '../stores/getOnePost';
 import {useUpdatePostStore} from '../stores/updatePost';
+
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
@@ -307,6 +315,9 @@ async function like() {
 
   &_body{
     padding: 5px 10px;
+    font-weight: 500;
+    text-align: center;
+    font-size: 1.1rem;
      
   }
 
@@ -386,7 +397,29 @@ async function like() {
         }
     }
 
+&_comments{
+    padding: 10px;
+    &_send{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+       
+       label{
+         width: 25%;
+         margin-left: 5px;
+         font-size: 0.9rem;
+         
+        // margin-right: 20px;
+       }
 
+       input{
+         width: 75%;
+         padding: 5px;
+         font-size: 1rem;
+       }
+
+    }
+}
    
 
 
