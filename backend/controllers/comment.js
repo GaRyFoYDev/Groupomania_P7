@@ -33,7 +33,8 @@ exports.getAllComments = async(req, res) => {
         const comments = await Comment.findAll({
            attributes: ['uuid','body','username', [sequelize.fn('DATE_FORMAT', sequelize.col('Comment.createdAt'), "%d-%m-%Y à %H:%i"),"createdAt" ]],
            order: [["createdAt", "DESC"]], 
-           include: [{model: Post, as: 'post', attributes: ['uuid']}]
+           include: [{model: Post, as: 'post', attributes: ['uuid']}, {model: User, as: 'user', attributes: ['uuid','image']}],
+          
           }
           );
           

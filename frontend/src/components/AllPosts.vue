@@ -37,14 +37,25 @@
       <h4>Commentaires</h4>
       <div v-for="comment in allCommentsStore.comments" class="post_comments_get"  :key="comment.uuid" >
          <div v-if="comment.post.uuid === post.uuid"  :commentId="comment.uuid" class="post_comments_get_container" >
-           <div class="post_comments_get_header">
-             <h4>{{comment.username}}</h4>
-             <p> le {{comment.createdAt}}</p>   
+                <div class="post_comments_get_image">
+                    <img v-if="comment.user.image !== null" :src="comment.user.image" />
+                    <img v-else src="../assets/images/default_profile_400x400.png"/>
+                </div>
+           <div>
+                <div class="post_comments_get_header">
+                  <h4>{{comment.username}}</h4>
+                  <p> le {{comment.createdAt}}</p>   
+                </div>
+                <div class="post_comments_get_body">
+                    <p>{{comment.body}}</p>
+                </div>
            </div>
-           <div class="post_comments_get_body">
-               <p>{{comment.body}}</p>
+            <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " >
+           <div>
+              <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button>
+              <button @click="" class="post_comments_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
-          
+         </div>
          </div> 
       </div>
       <div class="post_comments_send">
@@ -361,7 +372,7 @@ async function sendComment(){
   &_likes{
     display: flex;
     justify-content: space-around;
-    padding: 10px;
+    padding: 5px;
     background-color: rgba(34, 109, 159, 0.2);
     border-top: 1px solid rgba(34, 109, 159, 0.4);
     border-bottom: 1px solid rgba(34, 109, 159, 0.4);
@@ -408,9 +419,9 @@ async function sendComment(){
           color: var(--text-primary-color);
           border:none;
           border-radius:4px;
-          font-weight:700;
-          font-size: 1.2rem;
           padding: 3px;
+          font-size: 1.1rem;
+         
           cursor: pointer;
 
            &:hover{
@@ -421,11 +432,11 @@ async function sendComment(){
         &_supprimer{
           background-color: var(--danger-2);
           color: var(--text-primary-color);
-          font-size: 1.2rem;
+          font-size: 1.1rem;
            border:none;
           border-radius:4px;
-          font-weight:700;
           padding: 3px;
+          
           cursor: pointer;
 
           &:hover{
@@ -444,6 +455,7 @@ async function sendComment(){
     &_send{
       display: flex;
       align-items: center;
+      margin-top: 5px;
       
        button{
         
@@ -483,9 +495,25 @@ async function sendComment(){
     }
 
     &_get{
+       
 
         &_container{
           padding: 7px;
+        //  margin-left: 10px;
+          display: flex;
+          align-items: center;
+        }
+
+        &_image{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 10%;
+          margin-right: 10px;
+            img{
+              border-radius: 50%
+            }
+          
         }
         &_header{
           display: flex;
@@ -503,15 +531,49 @@ async function sendComment(){
               p{
                 
                 margin-left: 5px;
+                
               
               }
         }
         &_body{
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin-left: 3px;  
+            font-size: 0.875rem;
            
         }
     }
+
+      &_modifier{
+          background-color:#8e44ad;
+          color: var(--text-primary-color);
+          border:none;
+          border-radius:4px;
+          padding:3px;
+          font-size: 0.8rem;
+          margin-left: 210px;
+          margin-right: 5px;
+         
+          cursor: pointer;
+
+           &:hover{
+             background-color:#9b59b6;
+          }
+        
+        }
+        &_supprimer{
+          background-color: var(--danger-2);
+          color: var(--text-primary-color);
+          font-size: 0.8rem;
+          border:none;
+          border-radius:4px;
+          padding: 3px;
+          
+          cursor: pointer;
+
+          &:hover{
+             background-color: var(--danger-1);
+          }
+        }
 }
    
 
