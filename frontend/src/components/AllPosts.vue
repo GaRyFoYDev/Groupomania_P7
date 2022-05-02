@@ -12,8 +12,8 @@
       </div>
       <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
            <div  class="post_menu">
-              <button  v-if="post.user.uuid === userStore.uuid" @click="open" class="post_menu_modifier"  ><i @click="updateId = post.uuid" class="fa-regular fa-pen-to-square"></i></button>
-              <button @click="deletePost" class="post_menu_supprimer" ><i @click="deleteId = post.uuid" class="fa-regular fa-trash-can"></i></button>
+              <button  v-if="post.user.uuid === userStore.uuid" @click="id = post.uuid; open();" class="post_menu_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button>
+              <button @click="id = post.uuid; deletePost();" class="post_menu_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
   </div>
@@ -28,15 +28,28 @@
 
   <div class="post_likes">
       <div class="post_likes_up"  >
-        <button @click="changeColor"> <i class="fa-solid fa-thumbs-up" @click="like"  @mouseover="likeId = post.uuid"></i></button> 
+        <button @click="changeColor"> <i class="fa-solid fa-thumbs-up" @click="id = post.uuid; like();" ></i></button> 
         
           <p>{{post.likes}}</p>
       </div>  
     </div>
   <div class="post_comments">
+      <h4>Commentaires</h4>
+      <div v-for="comment in allCommentsStore.comments" class="post_comments_get"  :key="comment.uuid" >
+         <div v-if="comment.post.uuid === post.uuid"  :commentId="comment.uuid" class="post_comments_get_container" >
+           <div class="post_comments_get_header">
+             <h4>{{comment.username}}</h4>
+             <p> le {{comment.createdAt}}</p>   
+           </div>
+           <div class="post_comments_get_body">
+               <p>{{comment.body}}</p>
+           </div>
+          
+         </div> 
+      </div>
       <div class="post_comments_send">
-          <label for="comment">Laissez votre commentaire</label>
-          <input id="comment" type="text">
+           <input v-model="commentBody" id="comment" type="text" placeholder="Votre commentaire">
+          <button @click="id = post.uuid; sendComment();"><i class="fa-solid fa-circle-plus"></i></button>
       </div>
 
   </div>
@@ -79,35 +92,35 @@ import { useLoginStore } from '../stores/login';
 import { useUserStore } from '../stores/user';
 import { useGetOnePostStore } from '../stores/getOnePost';
 import {useUpdatePostStore} from '../stores/updatePost';
-
+import {useAllCommentsStore}from '../stores/allComments'
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
+const allCommentsStore = useAllCommentsStore();
 const userStore = useUserStore();
 const getOnePost = useGetOnePostStore();
 const updatePostStore = useUpdatePostStore();
 
 const openModal = ref(false)
-const deleteId = ref('')
-const updateId = ref('')
-const likeId = ref('')
+const id = ref('')
+const commentId = ref('')
 const updateContent = ref('')
 const updateImage = ref('')
 const imgFile =ref('')
 const errorUpdate = ref('')
 const likeData = ref(false)
+const commentBody = ref('')
 
 
 
  allPostsStore.refreshPosts();
+ allCommentsStore.refreshComments();
 
 
 
 async function deletePost(){
    
-    console.log(deleteId);
-
-    await fetch('http://localhost:5000/api/posts/' + deleteId.value, {
+    await fetch('http://localhost:5000/api/posts/' + id.value, {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
@@ -123,9 +136,7 @@ async function deletePost(){
 
 async function open() {
 
-  
-
-    await fetch( 'http://localhost:5000/api/posts/' + updateId.value, 
+    await fetch( 'http://localhost:5000/api/posts/' + id.value, 
         {headers: { "Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => {getOnePost.$state = { body: data.body, image: data.image} })
@@ -195,7 +206,7 @@ async function updatePost() {
         
     }else{
 
-        await fetch("http://localhost:5000/api/posts/" + updateId.value, requestOptions)
+        await fetch("http://localhost:5000/api/posts/" + id.value, requestOptions)
             .then(response => response.json())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -211,7 +222,7 @@ async function updatePost() {
 async function like() {
   
 
-    await fetch('http://localhost:5000/api/posts/like/' + likeId.value, {
+    await fetch('http://localhost:5000/api/posts/like/' + id.value, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -229,7 +240,7 @@ async function like() {
         }else{
           likeData.value = false
         }
-        //console.log(likeData.value);
+
     });
 
     
@@ -242,6 +253,32 @@ async function like() {
    target.style.color = likeData.value === false ? " rgba(52, 73, 94, 1)" : 'rgba(52, 73, 94, 0.5)';
  
      }
+
+async function sendComment(){
+
+    const requestOptions = {
+      method: 'POST',
+      body: JSON.stringify({
+          body: commentBody.value,
+          username: `${userStore.prenom} ${userStore.nom}`,
+          postUuid: id.value,
+          userUuid: userStore.uuid
+      }),
+      headers: {
+        "Authorization": `Bearer ${loginStore.token} `,
+        "Content-Type": "application/json"
+      }
+    }
+
+    await fetch('http://localhost:5000/api/comments',requestOptions)
+        .then((res) => res.json())
+
+
+    allCommentsStore.refreshComments();
+    allPostsStore.refreshPosts();
+    commentBody.value = null
+    
+}
 
 
 </script>
@@ -315,9 +352,9 @@ async function like() {
 
   &_body{
     padding: 5px 10px;
-    font-weight: 500;
-    text-align: center;
-    font-size: 1.1rem;
+  
+   
+     
      
   }
 
@@ -399,25 +436,81 @@ async function like() {
 
 &_comments{
     padding: 10px;
+
+    h4{
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
     &_send{
       display: flex;
       align-items: center;
-      justify-content: space-between;
-       
-       label{
-         width: 25%;
-         margin-left: 5px;
-         font-size: 0.9rem;
-         
+      
+       button{
+        
+        width: 8%;
+        border: 1px solid  rgba(52, 73, 94, 0.5);
+        padding: 6px;
+        border-top-right-radius: 4px ;
+        border-bottom-right-radius: 4px ;
+        color: rgba(52, 73, 94, 0.9);
+        font-size: 1.2rem;
+        background-color:rgba(34, 109, 159, 0.2);
+       cursor: pointer;
+       display: flex;
+       justify-content: center;
+
+        &:hover{
+              background-color:rgba(34, 109, 159, 0.4);
+        }
+        
         // margin-right: 20px;
        }
 
        input{
-         width: 75%;
-         padding: 5px;
-         font-size: 1rem;
+         padding:  8px;
+         width: 92%;
+         border: 1px solid  rgba(52, 73, 94, 0.5);
+         border-right: none;
+        border-top-left-radius: 4px ;
+        border-bottom-left-radius: 4px ;
+         
+         &::placeholder{
+           opacity: 0.7;
+         }
+        
        }
 
+    }
+
+    &_get{
+
+        &_container{
+          padding: 7px;
+        }
+        &_header{
+          display: flex;
+          align-items: baseline;
+          font-style: italic;
+           font-size: 0.825rem;
+        
+
+              h4{
+                color: var(--primary-2);
+                margin-bottom: 3px;
+                
+
+              }
+              p{
+                
+                margin-left: 5px;
+              
+              }
+        }
+        &_body{
+            font-size: 0.9rem;
+            margin-left: 3px;  
+           
+        }
     }
 }
    
