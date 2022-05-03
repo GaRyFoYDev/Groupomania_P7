@@ -45,3 +45,39 @@ exports.getAllComments = async(req, res) => {
         return res.status(500).json({error})
     }
 }
+
+
+exports.deleteComment = async(req, res) => {
+    const {userUuid} = req.body
+    const commentUuid = req.params.uuid
+   
+    try {
+        const comment = await Comment.findOne({where: {uuid: commentUuid}})
+
+        if(!comment){
+            return res.status(404).json({message: "Aucun commentaire trouvé !"});
+        }
+        else{
+             
+              const user = await User.findOne({where: {uuid : userUuid}})
+
+                if(user.id  === comment.userId  || user.role === 'admin'){
+                
+                     Comment.destroy({where: {uuid : commentUuid}});
+                    
+
+                return res.status(200).json({message: "Commentaire supprimé avec succès !"})
+
+                 }else{
+                    return res.status(403).json({message: 'Accès refusé'})
+                }
+        
+             }
+        
+             
+                 
+             
+    }catch (error) {
+        return res.status(500).json(error)
+    }
+}

@@ -7,7 +7,7 @@
         <img v-else src="../assets/images/default_profile_400x400.png"/>
         </div>
       <div class="post_header_info">
-          <h4>{{post.user.nom}} {{post.user.prenom}}</h4>
+          <h4>{{post.user.prenom}} {{post.user.nom}} </h4>
           <p>Publié le {{post.createdAt}} </p>
       </div>
       <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
@@ -52,8 +52,8 @@
            </div>
             <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " >
            <div>
-              <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button>
-              <button @click="" class="post_comments_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
+              <!-- <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button> -->
+              <button @click="commentId = comment.uuid; deleteComment();" class="post_comments_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
          </div> 
@@ -290,6 +290,30 @@ async function sendComment(){
     commentBody.value = null
     
 }
+
+async function deleteComment(){
+
+    const requestOptions = {
+      method: 'DELETE',
+      body: JSON.stringify({
+          userUuid: userStore.uuid
+      }),
+      headers: {
+        "Authorization": `Bearer ${loginStore.token} `,
+        "Content-Type": "application/json"
+      }
+    }
+
+    await fetch('http://localhost:5000/api/comments/' + commentId.value, requestOptions)
+        .then((res) => res.json())
+
+
+    allCommentsStore.refreshComments();
+    allPostsStore.refreshPosts();
+  
+    
+}
+
 
 
 </script>
@@ -543,23 +567,23 @@ async function sendComment(){
         }
     }
 
-      &_modifier{
-          background-color:#8e44ad;
-          color: var(--text-primary-color);
-          border:none;
-          border-radius:4px;
-          padding:3px;
-          font-size: 0.8rem;
-          margin-left: 210px;
-          margin-right: 5px;
+      // &_modifier{
+      //     background-color:#8e44ad;
+      //     color: var(--text-primary-color);
+      //     border:none;
+      //     border-radius:4px;
+      //     padding:3px;
+      //     font-size: 0.8rem;
+      //     margin-left: 210px;
+      //     margin-right: 5px;
          
-          cursor: pointer;
+      //     cursor: pointer;
 
-           &:hover{
-             background-color:#9b59b6;
-          }
+      //      &:hover{
+      //        background-color:#9b59b6;
+      //     }
         
-        }
+        // }
         &_supprimer{
           background-color: var(--danger-2);
           color: var(--text-primary-color);
@@ -567,6 +591,7 @@ async function sendComment(){
           border:none;
           border-radius:4px;
           padding: 3px;
+           margin-left: 200px;
           
           cursor: pointer;
 
