@@ -1,8 +1,8 @@
 <template>
     <nav>
-        <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
+        <div @click="home" class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
         <div class="logout">
-          <i class="fa-solid fa-user-gear"></i>
+          <i @click="profil" class="fa-solid fa-user-gear"></i>
          <i @click="logOut" class="fa-solid fa-right-from-bracket"></i>
         
         </div>
@@ -24,6 +24,25 @@ const logOut = async() =>{
     loginStore.$reset();
     userStore.$reset();
     await router.push({path: '/'});
+   
+   
+}
+const profil = () =>{
+
+    if(userStore.role === null){
+        router.push({path: '/profil'});
+        
+        }else if(userStore.role === 'admin') {
+             
+             router.push({path: '/admin'});
+        }
+    
+   
+}
+const home = async() =>{
+
+    await router.push({path: '/home'});
+
    
 }
 

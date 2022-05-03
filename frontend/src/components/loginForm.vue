@@ -50,10 +50,11 @@ const mySubmit = handleSubmit(async(data, {resetForm}) =>{
              };
 
          
-          await router.push({path: '/home'});
+          await router.push({path: '/home', query: {plan: 'welcome'}});
           resetForm();
+
+           
         
-      
           
         } else {
 

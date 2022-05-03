@@ -1,7 +1,7 @@
 <template>
 <TheHeader />
 <div class="welcome">
-    <h2 v-if="welcome"> Bienvenue {{userStore.prenom}} </h2>
+    <h2 v-if="welcome === true"> Bienvenue {{userStore.prenom}} </h2>
 </div>
 
 <SendPost  /> 
@@ -20,7 +20,7 @@ import {ref} from 'vue';
 
 const userStore = useUserStore();
 const loginStore = useLoginStore();
-const welcome = ref('true')
+const welcome = ref('false')
 
 
  async function getUser() {
@@ -38,11 +38,23 @@ const welcome = ref('true')
 
 getUser()
 
-setTimeout(() => {
-    welcome.value = false
-}, 5000);
+function hello(){
 
+    let params = new URLSearchParams(document.location.search);
+    let plan = params.get("plan")
+   
 
+    if(plan == "welcome"){
+        welcome.value = true
+        setTimeout(() => {
+            welcome.value = false
+        }, 5000);
+        
+    }
+
+}
+
+hello()
 
 
 
