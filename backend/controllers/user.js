@@ -65,7 +65,7 @@ exports.getOneUser = async (req, res) =>{
     try {
         
 
-        const user = await User.findOne({where: {uuid :req.params.uuid}, attributes: ["uuid", "nom","prenom","role"]});
+        const user = await User.findOne({where: {uuid :req.params.uuid}, attributes: ["uuid", "nom","prenom","role","image"]});
         if(!user){
             return res.status(404).json({message: "Aucun utilisateur trouvé"})
         }
@@ -97,4 +97,32 @@ exports.updatePassword = async (req, res) => {
 
 }
 
+exports.updateProfil = async(req, res) => {
 
+    const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.image;
+    
+    
+    const userUuid = req.params.uuid;
+   
+    try {
+
+        const user = await User.findOne({where: {uuid: userUuid}})
+
+        if(!user){
+            return res.status(404).json({message: "Aucune publication trouvée !"});
+
+        } else{
+    
+                 
+                  await User.update({image: image}, {where: {uuid : userUuid}});
+                
+                  return res.status(200).json({message: "Image de profil modifiée avec succès !"})
+    
+                   }
+    
+        
+
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+}

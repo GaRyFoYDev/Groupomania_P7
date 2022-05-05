@@ -1,4 +1,6 @@
-import { defineStore} from 'pinia'
+import { defineStore} from 'pinia';
+import { useLoginStore } from '../stores/login';
+const loginStore = useLoginStore();
 
 export const useUserStore = defineStore('user', {
     
@@ -7,9 +9,26 @@ export const useUserStore = defineStore('user', {
         uuid: null,
         nom: null,
         prenom:null,
-        role: null
+        role: null,
+        image: null
        
       }
+    },
+
+    actions: {
+      getUser(){
+
+        fetch('http://localhost:5000/api/auth/' + loginStore.userUuid, {headers: {"Authorization": `Bearer ${loginStore.token}`}})
+        .then((res) => res.json())
+        .then((data) => this.$state = {
+            uuid: data.uuid,
+            nom: data.nom,
+            prenom: data.prenom,
+            role: data.role,
+            image: data.image
+        })  
+      }
+
     },
 
      persist: true,

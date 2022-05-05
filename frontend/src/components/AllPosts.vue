@@ -10,7 +10,7 @@
           <h4>{{post.user.prenom}} {{post.user.nom}} </h4>
           <p>Publié le {{post.createdAt}} </p>
       </div>
-      <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'   " class="post_dropdown">
+      <div v-if="post.user.uuid === userStore.uuid || userStore.role === 'admin'" class="post_dropdown">
            <div  class="post_menu">
               <button  v-if="post.user.uuid === userStore.uuid" @click="id = post.uuid; open();" class="post_menu_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button>
               <button @click="id = post.uuid; deletePost();" class="post_menu_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
@@ -41,7 +41,7 @@
                     <img v-if="comment.user.image !== null" :src="comment.user.image" />
                     <img v-else src="../assets/images/default_profile_400x400.png"/>
                 </div>
-           <div>
+           <div class="post_comments_get_message">
                 <div class="post_comments_get_header">
                   <h4>{{comment.username}}</h4>
                   <p> le {{comment.createdAt}}</p>   
@@ -50,10 +50,10 @@
                     <p>{{comment.body}}</p>
                 </div>
            </div>
-            <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " >
+            <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " class="post_comments_get_btn" >
            <div>
               <!-- <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button> -->
-              <button @click="commentId = comment.uuid; deleteComment();" class="post_comments_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
+              <button @click="commentId = comment.uuid; deleteComment();" class="post_comments_get_btn_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
          </div> 
@@ -131,7 +131,7 @@ const commentBody = ref('')
 
 async function deletePost(){
    
-    await fetch('http://localhost:5000/api/posts/' + id.value, {
+    await fetch(`http://localhost:5000/api/posts/${id.value}`, {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
@@ -147,7 +147,7 @@ async function deletePost(){
 
 async function open() {
 
-    await fetch( 'http://localhost:5000/api/posts/' + id.value, 
+    await fetch(`http://localhost:5000/api/posts/${id.value}`, 
         {headers: { "Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => {getOnePost.$state = { body: data.body, image: data.image} })
@@ -217,7 +217,7 @@ async function updatePost() {
         
     }else{
 
-        await fetch("http://localhost:5000/api/posts/" + id.value, requestOptions)
+        await fetch(`http://localhost:5000/api/posts/${id.value}`, requestOptions)
             .then(response => response.json())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
@@ -233,7 +233,7 @@ async function updatePost() {
 async function like() {
   
 
-    await fetch('http://localhost:5000/api/posts/like/' + id.value, {
+    await fetch(`http://localhost:5000/api/posts/like/${id.value}`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -304,7 +304,7 @@ async function deleteComment(){
       }
     }
 
-    await fetch('http://localhost:5000/api/comments/' + commentId.value, requestOptions)
+    await fetch(`http://localhost:5000/api/comments/${commentId.value}`, requestOptions)
         .then((res) => res.json())
 
 
@@ -526,6 +526,7 @@ async function deleteComment(){
         //  margin-left: 10px;
           display: flex;
           align-items: center;
+         
         }
 
         &_image{
@@ -539,11 +540,15 @@ async function deleteComment(){
             }
           
         }
+
+      
         &_header{
           display: flex;
           align-items: baseline;
           font-style: italic;
-           font-size: 0.825rem;
+          font-size: 0.825rem;
+          width: 100%;
+          
         
 
               h4{
@@ -563,27 +568,14 @@ async function deleteComment(){
             font-size: 1rem;
             margin-left: 3px;  
             font-size: 0.875rem;
+            font-weight: 500;
            
         }
-    }
 
-      // &_modifier{
-      //     background-color:#8e44ad;
-      //     color: var(--text-primary-color);
-      //     border:none;
-      //     border-radius:4px;
-      //     padding:3px;
-      //     font-size: 0.8rem;
-      //     margin-left: 210px;
-      //     margin-right: 5px;
-         
-      //     cursor: pointer;
+          &_btn {
 
-      //      &:hover{
-      //        background-color:#9b59b6;
-      //     }
-        
-        // }
+        margin-left: 30%;
+
         &_supprimer{
           background-color: var(--danger-2);
           color: var(--text-primary-color);
@@ -591,7 +583,7 @@ async function deleteComment(){
           border:none;
           border-radius:4px;
           padding: 3px;
-           margin-left: 200px;
+           
           
           cursor: pointer;
 
@@ -599,7 +591,11 @@ async function deleteComment(){
              background-color: var(--danger-1);
           }
         }
+      }  
 }
+    }
+
+    
    
 
 

@@ -46,10 +46,10 @@ const errorMessage = ref('')
 
 
 const onFileChange = async(e) => {
-    file.value =  e.target.files[0];
+    file.value = document.getElementById('file').files[0];
     url.value = URL.createObjectURL(file.value);
     postStore.$state = {image: file}
-    console.log(url.value);
+    
 }
 
    
