@@ -13,5 +13,6 @@ router.get('/users',auth, userCtrl.getAllUsers);
 router.get('/:uuid',auth, userCtrl.getOneUser);
 router.put('/photo/:uuid',auth, multer, userCtrl.updateProfil);
 router.put('/password/:uuid',auth, userCtrl.updatePassword);
+router.delete('/:uuid',auth, userCtrl.deleteUser);
 
 module.exports = router;

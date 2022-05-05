@@ -9,7 +9,7 @@ import registerform from '../components/registerform.vue'
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 
 

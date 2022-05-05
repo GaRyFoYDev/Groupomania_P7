@@ -5,11 +5,11 @@
             <form @submit="mySubmit">
                 <div class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
                     <h2>Inscrivez-vous</h2>
-                        <input  @blur="handleNom"  v-model="nomValue" type="text" placeholder="Nom">
-                        <p v-if="nomError" class="error">{{nomError}}</p>
-
                         <input  @blur="handlePrenom" v-model="prenomValue" type="text" placeholder="Prénom">
                         <p v-if="prenomError"  class="error">{{prenomError}}</p>
+
+                        <input  @blur="handleNom"  v-model="nomValue" type="text" placeholder="Nom">
+                        <p v-if="nomError" class="error">{{nomError}}</p>
 
                         <input @blur="handleEmail"  v-model="emailValue" type="email" placeholder="Adresse mail">
                         <p v-if="emailError"  class="error">{{emailError}}</p>
@@ -19,9 +19,10 @@
 
                     <button class="btn btn-primary" type="submit" :disabled="isSubmitting">S'inscrire</button>
                     <p id="redirect">Vous avez déja un compte ?<span><router-link to="/">Connectez-vous</router-link></span></p>
-
+                <div v-if="errorMail">{{errorMail}}</div>
             </form>
         </div>
+
 
 
 </template>
@@ -29,10 +30,12 @@
 <script setup>
 
 import {useForm, useField} from 'vee-validate';
+import {ref} from 'vue';
 import router from '../router';
 import * as yup from 'yup';
 
-const API_URL = 'http://localhost:5000/api/auth/'
+const errorMail = ref('')
+
 
 const {handleSubmit, isSubmitting}= useForm();
 
@@ -41,17 +44,31 @@ const mySubmit = handleSubmit(async(values, {resetForm}) =>{
     try {
 
         
-        const res = await fetch( API_URL + 'signup', {
+        await fetch('http://localhost:5000/api/auth/signup', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: { 'Content-Type': 'application/json'} 
         })
-        
-       
-        await router.push({path: '/'});
-         resetForm();
+        .then((res) => {
+            res.json()
+           if(res.status == 201){
+                router.push({path: '/'});
+                resetForm()
+                this.$router.go()
+            }else{
+               errorMail.value = " Cet email n'est pas disponible ";
+
+                setTimeout(() => {
+                     errorMail.value = ''
+                     }, 4000);
+            }
+        })
+     
+
+   
+         
     } catch (error) {
-      
+       console.log(error);
     }
 })
 

@@ -5,22 +5,24 @@ const {User}  = require('../models/')
 
 // Création d'un compte utilisateur avec hach du mot de passe
 exports.signup = async (req, res) => {
-try {  
-    const {password}  = req.body;
-    const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({
-        nom: req.body.nom,
-        prenom: req.body.prenom,
-        email: req.body.email,
-        password: hash,
-        role: req.body.role,
-    }); 
-    return res.status(201).json(user)
+    try {  
+        const {password}  = req.body;
+        const hash = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            nom: req.body.nom,
+            prenom: req.body.prenom,
+            email: req.body.email,
+            password: hash,
+            role: req.body.role,
+        }); 
 
-} catch (error) {
-
-    return res.status(500).json(error)
-}};
+     
+            return res.status(201).json(user)
+    
+    } catch (error) {
+    
+        return res.status(500).json(error)
+    }};
 
 
 exports.login = async (req, res) => {
@@ -85,12 +87,26 @@ exports.getOneUser = async (req, res) =>{
 exports.updatePassword = async (req, res) => {
     
     try {
-        const {newpassword}  = req.body;
-        const user = await User.findOne({where : {uuid : req.params.uuid}});
-        const newHash = await bcrypt.hash(newpassword, 10); 
+
+        const {currentPassword, newPassword}  = req.body;
+        const userUuid =  req.params.uuid;
+
+        const user = await User.findOne({where : {uuid : userUuid}});
+
+        if (!user)
+        {
+            return res.status(404).json({ error: "Erreur userUuid" })
+        }
+            const match = await bcrypt.compare(currentPassword, user.password);
+        
+        if( match == false ){
+            return res.status(401).json({ error : "Mot de passe erroné" });
+         }
+
+        const newHash = await bcrypt.hash(newPassword, 10); 
          User.update({password : newHash},{where: {uuid : user.uuid}});
            
-           return res.status(200).json(user)
+        return res.status(200).json({message: "Mot de passe modifié avec succès"})
         }catch (error) {
         return res.status(500).json(error); 
     }
@@ -123,6 +139,29 @@ exports.updateProfil = async(req, res) => {
         
 
     } catch (error) {
+        return res.status(500).json(error)
+    }
+}
+
+exports.deleteUser = async(req, res) => {
+ 
+    const userUuid = req.params.uuid
+   
+    try {
+              const user = await User.findOne({where: {uuid : userUuid}})
+
+                if(user.uuid  === userUuid || user.role === 'admin'){
+               
+                     User.destroy({where: {uuid : userUuid}});
+                    
+
+                return res.status(200).json({message: "Utilisateur supprimé avec succès !"})
+
+                 }else{
+                    return res.status(403).json({message: 'Action interdite'})
+                }           
+             
+    }catch (error) {
         return res.status(500).json(error)
     }
 }
