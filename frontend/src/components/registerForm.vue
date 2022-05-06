@@ -17,9 +17,9 @@
                         <input @blur="handlePassword" v-model="passwordValue" type="password" placeholder="Mot de passe">
                         <p v-if="passwordError" class="error">{{passwordError}}</p>
 
+                      <div v-if="errorMail">{{errorMail}}</div>
                     <button class="btn btn-primary" type="submit" :disabled="isSubmitting">S'inscrire</button>
                     <p id="redirect">Vous avez déja un compte ?<span><router-link to="/">Connectez-vous</router-link></span></p>
-                <div v-if="errorMail">{{errorMail}}</div>
             </form>
         </div>
 
@@ -34,6 +34,7 @@ import {ref} from 'vue';
 import router from '../router';
 import * as yup from 'yup';
 
+
 const errorMail = ref('')
 
 
@@ -41,35 +42,42 @@ const {handleSubmit, isSubmitting}= useForm();
 
 
 const mySubmit = handleSubmit(async(values, {resetForm}) =>{
-    try {
+  
 
-        
         await fetch('http://localhost:5000/api/auth/signup', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: { 'Content-Type': 'application/json'} 
         })
-        .then((res) => {
-            res.json()
-           if(res.status == 201){
-                router.push({path: '/'});
+        .then(async(res) => {
+
+            if(res.ok){
+                
+                await router.push('/');
                 resetForm()
-                this.$router.go()
-            }else{
-               errorMail.value = " Cet email n'est pas disponible ";
+    
+                
+                return res.json() 
+              
+            }
+            else if(!res.ok && res.status == 409){
+                errorMail.value = "L'email est déja utilisé";
 
                 setTimeout(() => {
-                     errorMail.value = ''
-                     }, 4000);
+                   errorMail.value = null 
+                }, 4000);
             }
-        })
-     
+            else{
+                throw error
+            }
 
-   
-         
-    } catch (error) {
-       console.log(error);
-    }
+
+
+            
+        })
+        .catch((err) => console.log(err))
+       
+    
 })
 
 const {value: nomValue, errorMessage: nomError, handleChange: handleNom} = useField('nom',

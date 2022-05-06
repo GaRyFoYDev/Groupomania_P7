@@ -20,8 +20,11 @@ exports.signup = async (req, res) => {
             return res.status(201).json(user)
     
     } catch (error) {
-    
-        return res.status(500).json(error)
+        
+        if(error.errors[0].message == 'email must be unique'){
+            return res.status(409).json({message: "email must be unique"})
+        }
+        return res.status(500).json(error.errors)
     }};
 
 

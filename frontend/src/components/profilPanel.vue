@@ -135,7 +135,7 @@ const {value: currentValue, errorMessage: currentPasswordError, handleChange: ha
 
 async function deleteAccount(){
 
-    await fetch(`http://localhost:5000/api/auth/photo/${id}`, {
+    await fetch(`http://localhost:5000/api/auth/${id}`, {
        
        method: 'DELETE',
        headers: {
@@ -144,7 +144,7 @@ async function deleteAccount(){
         }
     })
 
-    await router.push('/')
+   await router.push('/')
 }
 
 </script>
