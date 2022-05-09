@@ -210,7 +210,6 @@ form{
  
  .errorMessage{
      color: var(--danger-1);
-     text-align: center;
      font-size: 0.875rem
  }
 

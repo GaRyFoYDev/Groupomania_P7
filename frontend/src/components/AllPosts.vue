@@ -53,7 +53,7 @@
             <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " class="post_comments_get_btn" >
            <div>
               <!-- <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button> -->
-              <button @click="commentId = comment.uuid; deleteComment();" class="post_comments_get_btn_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
+              <button @click.passive="commentId = comment.uuid; deleteComment();" class="post_comments_get_btn_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
          </div> 
@@ -61,8 +61,9 @@
       <div class="post_comments_send">
            <input v-model="commentBody" id="comment" type="text" placeholder="Votre commentaire">
           <button @click="id = post.uuid; sendComment();"><i class="fa-solid fa-circle-plus"></i></button>
+          
       </div>
-
+    <div class="errorComment"><p >{{errorComment}}</p></div>  
   </div>
 
 </div>
@@ -119,6 +120,7 @@ const updateContent = ref('')
 const updateImage = ref('')
 const imgFile =ref('')
 const errorUpdate = ref('')
+const errorComment = ref('')
 const likeData = ref(false)
 const commentBody = ref('')
 
@@ -267,6 +269,20 @@ async function like() {
 
 async function sendComment(){
 
+
+    if(errorComment.value === '' || 'null'){
+
+            errorComment.value = "Votre commentaire est vide";
+
+             setTimeout(() => {
+             errorComment.value = null 
+          }, 3000);
+        
+        
+    }else{
+
+        
+
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify({
@@ -289,6 +305,7 @@ async function sendComment(){
     allPostsStore.refreshPosts();
     commentBody.value = null
     
+}
 }
 
 async function deleteComment(){
@@ -698,5 +715,9 @@ async function deleteComment(){
   
     }
 
-
+.errorComment{
+  color: var(--danger-1);
+  padding: 5px;
+  font-size: 0.825rem;
+}
 </style>

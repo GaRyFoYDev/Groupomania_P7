@@ -55,6 +55,7 @@
       
     </div>
 </div>
+
 </template>
 
 
@@ -98,6 +99,7 @@ async function updateProfilImage() {
     .then((res) => res.json())
 
     await userStore.getUser();
+    await userStore.getAll();
 }
 
 const {handleSubmit}= useForm();

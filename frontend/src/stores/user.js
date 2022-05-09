@@ -10,7 +10,8 @@ export const useUserStore = defineStore('user', {
         nom: null,
         prenom:null,
         role: null,
-        image: null
+        image: null,
+        users: null
        
       }
     },
@@ -27,6 +28,13 @@ export const useUserStore = defineStore('user', {
             role: data.role,
             image: data.image
         })  
+      },
+
+      getAll(){
+        fetch('http://localhost:5000/api/auth/users', {headers: {"Authorization": `Bearer ${loginStore.token}`}})
+        .then((res) => res.json())
+        .then((data) => this.$state = {users: data})
+
       }
 
     },
