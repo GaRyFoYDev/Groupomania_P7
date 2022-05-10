@@ -146,7 +146,9 @@ async function deleteAccount(){
         }
     })
 
-   await router.push('/')
+   router.push('/')
+   await  loginStore.$reset();
+    userStore.$reset();
 }
 
 </script>
@@ -176,11 +178,15 @@ h4{
         display: flex;
         flex-direction: column;
         background-color: var(--text-primary-color);
-        height: 70vh;
-        margin: 10px;
+     
+        margin: 10px auto;
         padding: 20px;
         border: 1px solid var(--gray-2);
         border-radius: 4px;
+        max-width: 70%;
+
+        
+         
         
         hr{
             width: 80%;
@@ -190,7 +196,13 @@ h4{
         }
 
         h2{
-            color: var(--primary-2)
+            color: var(--primary-2);
+
+            @media screen and (max-width: 320px) {
+                 
+                 font-size: 1.2rem ;
+         
+    }
         }
         
     }
@@ -213,7 +225,14 @@ h4{
                height: 200px;
                width: 200px;
                object-fit: center-cover;
-              
+               @media screen and (max-width: 320px) {
+                height: 100px;
+               width: 100px;
+    }
+               @media screen and (max-width: 768px) {
+                height: 150px;
+               width: 150px;
+    }
            }
         }
     }
@@ -226,6 +245,14 @@ h4{
         padding: 20px;
         margin-top: 10px;
 
+
+          @media screen and (max-width: 768px) {
+         flex-direction: column;
+         padding: 0;
+         
+    }
+         
+
         &_password{
             width: 50%;
             text-align: center;
@@ -233,10 +260,25 @@ h4{
             align-items: center;
             flex-direction: column;
 
+             @media screen and (max-width: 768px) {
+             margin-bottom: 20px;
+    }
+             @media screen and (max-width: 320px) {
+             margin-bottom: 20px;
+              width: 100%;
+    }
+
             h4{
                 margin-bottom: 20px;
                 text-transform: uppercase;
                 font-size: 1rem;
+
+                 @media screen and (max-width: 320px) {
+                 width: 100%;  
+                 padding: 0;
+                 font-size: 0.8rem ;
+         
+    }
                 
             }
 
@@ -282,6 +324,12 @@ h4{
            button{
                margin:10px;
                padding:10px;
+
+             @media screen and (max-width: 320px) {
+                 width: 100%;  
+                
+         
+    }   
 
            }
         }

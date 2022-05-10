@@ -99,6 +99,7 @@
 
 <script setup>
 import { ref } from 'vue'
+
 import { useAllPostsStore } from '../stores/allPosts';
 import { useLoginStore } from '../stores/login';
 import { useUserStore } from '../stores/user';
@@ -144,7 +145,7 @@ async function deletePost(){
     })
     .then((res) => res.json());
 
-    allPostsStore.refreshPosts()
+   allPostsStore.refreshPosts()
 }
 
 async function open() {
@@ -270,7 +271,7 @@ async function like() {
 async function sendComment(){
 
 
-    if(errorComment.value === '' || 'null'){
+    if(commentBody.value == null || '' ){
 
             errorComment.value = "Votre commentaire est vide";
 
@@ -337,10 +338,14 @@ async function deleteComment(){
 
 <style lang="scss" scoped>
 
+ body{
+   min-width: 320px;
+ }
 .post{
-
+ 
   &_container
     {
+    
     width: 40%;
     display:flex;
     flex-direction:column;
@@ -351,6 +356,13 @@ async function deleteComment(){
     border: 1px solid rgba(52, 73, 94, 0.2);
     border-radius: 10px;
     position: relative;
+
+    @media screen and (max-width: 900px) {
+       width: 60%;
+    }
+    @media screen and (max-width: 320px) {
+       width: 95%;
+    }
     
     }
    
@@ -377,11 +389,18 @@ async function deleteComment(){
       h4{
         color: var(--primary-2);
         margin-bottom: 5px;
+        @media screen and (max-width: 320px) {
+       font-size: 0.8rem;
+    }
       }
 
       p{
         font-style: italic;
         font-size: 0.875rem;
+
+      @media screen and (max-width: 320px) {
+       font-size: 0.75rem;
+    }
       }
 
     }
@@ -430,6 +449,10 @@ async function deleteComment(){
         cursor: pointer;
         font-size: 1.1rem;
         padding: 2px;
+
+         @media screen and (max-width: 320px) {
+       font-size: 0.9rem;
+    }
        
       }
 
@@ -454,6 +477,9 @@ async function deleteComment(){
     //font-size: 2rem;
     display: flex;
     gap:10px;
+     @media screen and (max-width: 768px) {
+       flex-direction: column;
+    }
     
         &_modifier{
           background-color:#8e44ad;
@@ -552,6 +578,10 @@ async function deleteComment(){
           align-items: center;
           width: 10%;
           margin-right: 10px;
+
+          @media screen and (max-width: 320px) {
+              width: 15%;
+            }
             img{
               border-radius: 50%
             }
@@ -566,18 +596,29 @@ async function deleteComment(){
           font-size: 0.825rem;
           width: 100%;
           
+           
+          @media screen and (max-width: 1150px) {
+              flex-direction: column;
+            }
+          
         
 
               h4{
                 color: var(--primary-2);
                 margin-bottom: 3px;
-                
+                 @media screen and (max-width: 1150px) {
+                 font-size: 0.8rem;
+                  margin-bottom: 5px;
+            }
 
               }
               p{
                 
                 margin-left: 5px;
-                
+              @media screen and (max-width: 1150px) {
+              font-size: 0.75rem;
+              margin-bottom: 5px;
+            }
               
               }
         }

@@ -3,30 +3,19 @@
 
 <div class="admin_container">
     <h2>Liste des utilisateurs</h2>
-    <div  v-for="user in userStore.users">
-     <div class="card">
+    <div  v-for="user in userStore.users" :key="user.uuid">
+     <div  class="card" >
         <div class="card_image">
             <img v-if="user.image !== null " :src="user.image" alt="">
             <img v-else src="../assets/images/default_profile_400x400.png" alt="">
             
             </div>
         <div>{{user.prenom}} <span>{{user.nom}}</span></div>
-        <button @click.self="show = true" class="btn btn-primary"><i class="fa-regular fa-trash-can"></i></button>
+        <button @click="id= user.uuid; deleteAccount();" class="btn btn-primary"><i class="fa-regular fa-trash-can"></i></button>
          
      </div>
-       <Transition class="verification">
-        <div v-if="show" class="profil_delete_check">
-            <p>Êtes-vous sûr de bien vouloir supprimer votre compte ?</p>
-            <div  class="profil_delete_check_btn">
-                <button @click="id = user.uuid; deleteAccount()" class="btn delete ">Oui</button>
-                <button @click.self=" show =false" class="btn btn-primary" >Non</button>
-
-            </div>
-        </div>
-
-        </Transition>     
     </div>
-  
+     
 </div>
 
 </template>
@@ -42,10 +31,10 @@ import {ref} from 'vue';
 const userStore = useUserStore();
 const loginStore = useLoginStore();
 const id = ref('');
-const show = ref(false)
 
 
 userStore.getAll();
+
 
 
 async function deleteAccount(){
@@ -59,7 +48,7 @@ async function deleteAccount(){
         }
     })
 
-   await router.push('/')
+   await userStore.getAll();
 }
 
 
@@ -77,7 +66,8 @@ async function deleteAccount(){
 
     &_container{
         width: 50%;
-        height: 20vh;
+        min-height: 20vh;
+
         
         border-radius: 5px;
         margin: 0 auto 200px;

@@ -141,6 +141,14 @@ form{
     padding: 20px;
     border: 1px solid rgba(52, 73, 94, 0.2);
     border-radius: 10px;
+
+
+    @media screen and (max-width: 900px) {
+       width: 60%;
+    }
+    @media screen and (max-width: 320px) {
+       width: 95%;
+    }
    
     h3{
         margin-bottom: 20px;
@@ -153,6 +161,10 @@ form{
         margin-bottom: 10px;
         padding: 0 0 60px 10px;
         font-size: 0.9rem;
+
+        @media screen and (max-width: 280px) {
+          padding: 0 0 40px 10px;
+    }
 
         &::placeholder{
             opacity: 0.7;
@@ -211,6 +223,13 @@ form{
  .errorMessage{
      color: var(--danger-1);
      font-size: 0.875rem
+ }
+
+ label{
+
+     @media screen and (max-width: 280px) {
+       width: 70%;
+    }
  }
 
 }

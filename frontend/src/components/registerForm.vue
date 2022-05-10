@@ -24,19 +24,18 @@
         </div>
 
 
-
 </template>
 
 <script setup>
 
 import {useForm, useField} from 'vee-validate';
 import {ref} from 'vue';
+
+
 import router from '../router';
 import * as yup from 'yup';
 
-
 const errorMail = ref('')
-
 
 const {handleSubmit, isSubmitting}= useForm();
 
@@ -53,6 +52,7 @@ const mySubmit = handleSubmit(async(values, {resetForm}) =>{
 
             if(res.ok){
                 
+            
                 await router.push('/');
                 resetForm()
     

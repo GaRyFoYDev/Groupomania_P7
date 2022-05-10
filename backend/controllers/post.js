@@ -66,7 +66,7 @@ exports.deletePost = async(req, res) => {
         const post = await Post.findOne({where: {uuid: postUuid}})
 
         if(!post){
-            return res.status(400).json({message: "Aucune publication trouvée !"});
+            return res.status(404).json({message: "Aucune publication trouvée !"});
         }
         else{
               const user = await User.findOne({where: {uuid : userUuid}})

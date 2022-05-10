@@ -63,6 +63,11 @@ nav{
         width: 40%;
         cursor:pointer;
 
+       @media screen and (max-width: 320px) {
+        width: 50%;
+    }
+      
+
         
     }
 
@@ -77,6 +82,10 @@ nav{
         
     i{
         cursor: pointer;
+         @media screen and (max-width: 768px) {
+        margin-right: 15px;
+       }
+       
         &:hover{
             color: var(--primary-1);
            
