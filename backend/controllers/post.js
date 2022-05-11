@@ -116,8 +116,13 @@ exports.updatePost = async(req, res) => {
                 const user = await User.findOne({where: {uuid : userUuid}})
     
                   if(user.id  === post.userId){
+                    
+                    const file = post.image.split("/images/")[1];
+                    fs.unlink(`images/${file}`, () => {
+                        
+                    Post.update({ body, image}, {where: {uuid : postUuid}});
+                       });
                   
-                  await Post.update({ body, image}, {where: {uuid : postUuid}});
                 
                   return res.status(200).json({message: "Publication modifiée avec succès !"})
     
