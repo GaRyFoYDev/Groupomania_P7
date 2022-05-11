@@ -1,10 +1,17 @@
 <template>
     <div class="toast_wrapper">
         <div class="toast">
-            Votre inscription a été validée !
+           {{notifyText}}
         </div>
     </div>
 </template>
+
+<script setup>
+
+
+const props = defineProps(['notifyText'])
+
+</script>
 
 <style lang="scss" scoped>
 .toast{

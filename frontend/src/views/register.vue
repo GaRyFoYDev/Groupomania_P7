@@ -1,7 +1,7 @@
 
 <template>
         <Transition name="toast">
-            <Toast v-if="showNotif" />
+            <Toast v-if="showNotif" notifyText="Votre inscription a été validée !" />
         </Transition>
         <div class="form-container">
            

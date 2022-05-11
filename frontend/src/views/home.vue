@@ -1,9 +1,8 @@
 <template>
 <TheHeader />
-<div class="welcome">
-    <h2 v-if="welcome === true"> Bienvenue {{userStore.prenom}} </h2>
-</div>
-
+    <Transition name="toast">
+        <Toast v-if="welcome == true"  :notifyText=" 'Bienvenue ' + userStore.prenom  " />       
+    </Transition>
 <SendPost  /> 
 <AllPosts />
 </template>
@@ -16,10 +15,13 @@ import AllPosts from "../components/AllPosts.vue";
 
 import{useUserStore} from '@/stores/user';
 import {ref} from 'vue';
+import Toast from "../components/Toast.vue";
 
 const userStore = useUserStore();
 
 const welcome = ref('false')
+
+
 
 userStore.getUser()
 
@@ -56,6 +58,28 @@ h2{
 }
 }
 
+.toast-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-enter-active{
+    transition: all 0.3s ease;
+}
+.toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
+}
 
 
 
