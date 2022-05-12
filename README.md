@@ -40,6 +40,13 @@ sequelize db:migrate
 ```
 
 
+#### Création du dossier images pour le stockages des photos Upload
+```
+mkdir images
+```
+
+
+
 #### Lancement du serveur backend
 ```
 npm start
