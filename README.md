@@ -62,7 +62,9 @@ npm install
 ```
 
 
-#### Lancement du serveur backend
+#### Lancement du serveur frontend
 ```
 npm run dev
 ```
+
+Ouvrez le projet en utilisant le lien fournit dans le terminal
