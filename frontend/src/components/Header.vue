@@ -1,5 +1,8 @@
 <template>
     <nav>
+        <Transition name="toast">
+            <ToastInfo v-if="goodBye" notifyText="Vous allez être déconnecté !" @close-notif="close"/>
+        </Transition>
         <div @click="home" class="logo"><img src="../assets/images/icon-left-font-monochrome-white.svg" alt=""></div>
         <div class="logout">
           <i @click="profil" class="fa-solid fa-user-gear"></i>
@@ -15,15 +18,22 @@
 <script setup>
 import router from '../router';
 import { useLoginStore} from '../stores/login';
-import {useUserStore} from '../stores/user'
+import {useUserStore} from '../stores/user';
+import {ref} from 'vue';
+import ToastInfo from './ToastInfo.vue';
 const loginStore = useLoginStore();
 const userStore = useUserStore();
+const goodBye = ref(false)
+const close = () => goodBye.value = false;
 
 const logOut = async() =>{
 
+    goodBye.value = true;
+    setTimeout(() => {goodBye.value =  false},2500)
+    setTimeout(() => {router.push('/')},3500)
     loginStore.$reset();
     userStore.$reset();
-    await router.push({path: '/'});
+
    
    
 }
@@ -94,5 +104,29 @@ nav{
 }
 
 }
+
+.toast-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-enter-active{
+    transition: all 0.3s ease;
+}
+.toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
+}
+
 
 </style>

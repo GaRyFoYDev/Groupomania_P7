@@ -1,7 +1,7 @@
 <template>
 <TheHeader />
     <Transition name="toast">
-        <Toast v-if="welcome == true"  :notifyText=" 'Bienvenue ' + userStore.prenom  " />       
+        <ToastInfo v-if="welcome"  :notifyText=" 'Bienvenue ' + userStore.prenom" @close-notif="close" />       
     </Transition>
 <SendPost  /> 
 <AllPosts />
@@ -15,12 +15,14 @@ import AllPosts from "../components/AllPosts.vue";
 
 import{useUserStore} from '@/stores/user';
 import {ref} from 'vue';
-import Toast from "../components/Toast.vue";
+
+import ToastInfo from "../components/ToastInfo.vue";
 
 const userStore = useUserStore();
 
-const welcome = ref('false')
+const welcome = ref(false);
 
+const close = () => {welcome.value = false};
 
 
 userStore.getUser()

@@ -53,7 +53,7 @@
             <div v-if="comment.user.uuid === userStore.uuid || userStore.role === 'admin' " class="post_comments_get_btn" >
            <div>
               <!-- <button  v-if="comment.user.uuid === userStore.uuid" @click="" class="post_comments_modifier"  ><i  class="fa-regular fa-pen-to-square"></i></button> -->
-              <button @click.passive="commentId = comment.uuid; deleteComment();" class="post_comments_get_btn_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
+              <button @click="commentId = comment.uuid; deleteComment();" class="post_comments_get_btn_supprimer" ><i class="fa-regular fa-trash-can"></i></button>
            </div>
          </div>
          </div> 
@@ -145,7 +145,7 @@ async function deletePost(){
     })
     .then((res) => res.json());
 
-   allPostsStore.refreshPosts()
+  await allPostsStore.refreshPosts()
 }
 
 async function open() {

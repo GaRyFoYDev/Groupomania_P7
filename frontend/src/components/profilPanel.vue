@@ -1,4 +1,13 @@
 <template >
+<Transition name="toast">
+    <Toast v-if="successUpdatePassword"  notifyText="Votre mot de passe a bien été modifié !" @close-notif="closeSuccessPassword" />
+</Transition>
+<Transition name="toast">
+    <Toast v-if="successDeleteAccount"  notifyText="Votre compte a été supprimé avec succès !" @close-notif="closeDeleteAccount"/>
+</Transition>
+<Transition name="toast">
+    <ToastError v-if="failedUpdatePassword"  notifyText="Mot de passe erroné !"  @close-notif="closeUpdatePassword"/>
+</Transition>
 <div class="profil_container">
     <h2 class="profil_name">{{userStore.prenom}} {{userStore.nom}}</h2>
     <hr>
@@ -67,6 +76,8 @@ import{useUserStore} from '@/stores/user';
 import{useLoginStore} from '@/stores/login';
 import { useUpdateProfilStore } from '../stores/updateProfil';
 import router from '../router';
+import Toast from './Toast.vue';
+import ToastError from './ToastError.vue';
 
 const userStore = useUserStore();
 const loginStore = useLoginStore();
@@ -74,8 +85,12 @@ const updateProfilStore = useUpdateProfilStore();
 const file = ref('');
 const id = userStore.uuid
 const show = ref(false)
-
-
+const successUpdatePassword = ref(false)
+const failedUpdatePassword = ref(false)
+const successDeleteAccount = ref(false)
+const closeSuccessPassword = () => {successUpdatePassword .value = false}
+const closeUpdatePassword = () => {failedUpdatePassword.value = false}
+const closeDeleteAccount = () => { successDeleteAccount.value = false}
 
 async function updateProfilImage() {
 
@@ -115,7 +130,18 @@ const updatePassword = handleSubmit(async(values, {resetForm}) => {
             "Content-Type": "application/json"
         }
     })
-    .then((res) => res.json())
+    .then((res) => {
+        
+        if(res.ok){
+
+           successUpdatePassword.value = true;
+           setTimeout(() => {successUpdatePassword.value =  false},3000)
+        }else if (!res.ok && res.status == 401){
+            failedUpdatePassword.value = true;
+            setTimeout(() => {failedUpdatePassword.value =  false},3000)
+        }
+        
+        return res.json()})
     .catch((err) => console.log(err.message))
 
     resetForm();
@@ -145,10 +171,17 @@ async function deleteAccount(){
             "Content-Type": "application/json"
         }
     })
+    .then(async(res) => {
+        if(res.ok){
+            successDeleteAccount.value = true;
+            setTimeout(() => {successDeleteAccount.value =  false},2500)
+            setTimeout(() => {router.push('/')},3500)
+            await loginStore.$reset();
+            userStore.$reset();
+        }
 
-   router.push('/')
-   await  loginStore.$reset();
-    userStore.$reset();
+    })
+  
 }
 
 </script>
@@ -389,5 +422,29 @@ h4{
 .v-leave-to {
   opacity: 0;
 }
+
+.toast-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-enter-active{
+    transition: all 0.3s ease;
+}
+.toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
+}
+
 
 </style>

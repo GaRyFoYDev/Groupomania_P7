@@ -2,7 +2,7 @@
     <div class="toast_wrapper">
         <div class="toast">
            {{notifyText}}
-            <div class="close" @click="$emit('closeNotif')"><i class="fa-solid fa-circle-xmark"></i></div>
+         <div class="close" @click="$emit('closeNotif')"><i class="fa-solid fa-circle-xmark"></i></div>
         </div>
     </div>
 </template>
@@ -20,13 +20,13 @@ const props = defineProps(['notifyText'])
     color: var(--text-primary-color);
     font-weight: 500;
     text-align: center;
-    background-color: var(--success-1);
+    background-color: var(--primary-1);
     border-radius: 10px;
     box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.5);
     max-width: 400px;
     margin: 0 auto;
-    border: 2px solid var(--success-2);
-     position: relative;
+    border: 2px solid var(--primary-2);
+    position: relative;
 
     &_wrapper{
         position: fixed;
@@ -34,6 +34,7 @@ const props = defineProps(['notifyText'])
         top: 20px;
     }
 }
+
 .close{
     position:absolute;
     right: 5px;

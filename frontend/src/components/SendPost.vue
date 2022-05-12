@@ -111,9 +111,9 @@ const sendPost = async() => {
             url.value = null;
     }
 
-        resetForm()
-        
-        allPostsStore.refreshPosts()
+        resetForm();
+        await postStore.$reset();
+        allPostsStore.refreshPosts();
        
 }
     
