@@ -4,6 +4,9 @@
 
 ### Installation
 
+Ouvrir le dossier backend depuis le terminal de commande.
+
+Taper la commande pour installer les paquets npm.
 ```
 npm install
 ```
@@ -13,9 +16,9 @@ Depuis le dossier Backend créer un fichier .env
 
 **PORT** = 5000  
 
-**DB_USERNAME** = ' nom utilisateur'  
+**DB_USERNAME** = ' nom utilisateur du système de gestion de base de donnée'   
 
-**DB_PASSWORD** = ' mot de passe '
+**DB_PASSWORD** = ' mot de passe du système de gestion de base de donnée'
 
 **DB_NAME** = ' nom de la base de donnée '
 
@@ -37,7 +40,7 @@ sequelize db:migrate
 ```
 
 
-#### lancement du serveur backend
+#### Lancement du serveur backend
 ```
 npm start
 ```
@@ -51,12 +54,15 @@ npm start
 
 ### Installation
 
+Ouvrir le dossier frontend depuis le terminal de commande.
+
+Taper la commande pour installer les paquets npm.
 ```
 npm install
 ```
 
 
-#### lancement du serveur backend
+#### Lancement du serveur backend
 ```
 npm run dev
 ```
