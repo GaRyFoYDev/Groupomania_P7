@@ -4,56 +4,56 @@
 
 ### Installation
 
-Ouvrir le dossier backend depuis le terminal de commande.
+Open the backend folder from the command line
 
-Taper la commande pour installer les paquets npm.
+Run this command to install the packages
 ```
 npm install
 ```
 
-#### Configuration de la base de donnée
-Depuis le dossier Backend créer un fichier .env 
+#### Database configuration 
+From the backend folder create a file .env 
 
 **PORT** = 5000  
 
-**DB_USERNAME** = ' nom utilisateur du système de gestion de base de donnée'   
+**DB_USERNAME** = ' username'   
 
-**DB_PASSWORD** = ' mot de passe du système de gestion de base de donnée'
+**DB_PASSWORD** = ' password'
 
-**DB_NAME** = ' nom de la base de donnée '
+**DB_NAME** = 'database'
 
 **DB_HOST** = 127.0.0.1
 
-**SECRET** = ' chaine de caractère pour le payload du token '
+**SECRET** = ' string for the token payload '
 
 
 
-#### Création de la de la base de donnée
+#### Database creation
 ```
 sequelize db:create 
 ```
 
 
-#### Création des tables
+#### Tables creation
 ```
 sequelize db:migrate 
 ```
 
 
-#### Création du dossier images pour le stockages des photos Upload
+#### Image folder creation
 ```
 mkdir images
 ```
 
 
-
-#### Lancement du serveur backend
+#### Run the backend server
 ```
 npm start
 ```
 
+#### Create a admin
 
-
+Update the user role field to "admin".
 
 ## Frontend
 
@@ -61,17 +61,17 @@ npm start
 
 ### Installation
 
-Ouvrir le dossier frontend depuis le terminal de commande.
+Open the frontend folder from the command line
 
-Taper la commande pour installer les paquets npm.
+Run this command to install the packages
 ```
 npm install
 ```
 
 
-#### Lancement du serveur frontend
+#### Run the frontend server
 ```
 npm run dev
 ```
 
-Ouvrez le projet en utilisant le lien fournit dans le terminal
+Open the app fom the localhost:3000
