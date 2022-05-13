@@ -85,12 +85,18 @@ const updateProfilStore = useUpdateProfilStore();
 const file = ref('');
 const id = userStore.uuid
 const show = ref(false)
-const successUpdatePassword = ref(false)
-const failedUpdatePassword = ref(false)
-const successDeleteAccount = ref(false)
-const closeSuccessPassword = () => {successUpdatePassword .value = false}
-const closeUpdatePassword = () => {failedUpdatePassword.value = false}
-const closeDeleteAccount = () => { successDeleteAccount.value = false}
+const successUpdatePassword = ref(false);
+const failedUpdatePassword = ref(false);
+const successDeleteAccount = ref(false);
+const closeSuccessPassword = () => {successUpdatePassword .value = false};
+const closeUpdatePassword = () => {failedUpdatePassword.value = false};
+
+const closeDeleteAccount = () => { 
+    successDeleteAccount.value = false
+    loginStore.$reset();
+    userStore.$reset();
+    router.push('/')
+    }
 
 async function updateProfilImage() {
 
@@ -218,7 +224,9 @@ h4{
         border-radius: 4px;
         max-width: 70%;
 
-        
+          @media screen and (max-width: 320px) {
+          max-width: 95%;
+    }
          
         
         hr{

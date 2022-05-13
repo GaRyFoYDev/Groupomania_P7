@@ -24,7 +24,11 @@ import ToastInfo from './ToastInfo.vue';
 const loginStore = useLoginStore();
 const userStore = useUserStore();
 const goodBye = ref(false)
-const close = () => goodBye.value = false;
+const close = () =>{ 
+    
+    goodBye.value = false
+    router.push('/')
+    };
 
 const logOut = async() =>{
 

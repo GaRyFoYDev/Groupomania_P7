@@ -1,7 +1,7 @@
 
 <template>
         <Transition name="toast">
-            <Toast v-if="showNotif" notifyText="Votre inscription a été validée !" />
+            <Toast v-if="showNotif" notifyText="Votre inscription a été validée, vous allez être redirigé vers la page connexion !" @close-notif="close" />
         </Transition>
         <div class="form-container">
            
@@ -38,8 +38,13 @@ import Toast from '../components/Toast.vue';
 import router from '../router';
 import * as yup from 'yup';
 
-const errorMail = ref('')
-const showNotif = ref(false)
+const errorMail = ref('');
+const showNotif = ref(false);
+const close = () =>{ 
+    showNotif.value = false
+    router.push('/')
+   
+    };
 
 const {handleSubmit, isSubmitting}= useForm();
 
@@ -147,16 +152,13 @@ const {value: passwordValue, errorMessage: passwordError, handleChange: handlePa
 
 
 .form-container{
-position:absolute;
-left: 0;
-right: 0;
-bottom:0;
-top:0;
 display: flex;
 align-items: center;
 justify-content: center;
-
-
+ position: fixed;
+width: 100%;
+top: 150px;
+      
     form{
         background-color: var(--danger-2);
         display: flex;
@@ -176,6 +178,7 @@ justify-content: center;
 
            
         }
+       
 
         #logo{
            display: flex;
