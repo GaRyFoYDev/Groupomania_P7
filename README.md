@@ -12,7 +12,7 @@ npm install
 ```
 
 #### Database configuration 
-From the backend folder create a file .env 
+From the backend folder create a .env file
 
 **PORT** = 5000  
 
@@ -51,9 +51,12 @@ mkdir images
 npm start
 ```
 
-#### Create a admin
 
-Update the user role field to "admin".
+#### Create an admin
+
+Update the user role field to "admin" in your database.
+
+
 
 ## Frontend
 
