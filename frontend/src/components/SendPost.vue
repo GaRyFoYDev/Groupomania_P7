@@ -1,4 +1,7 @@
 <template>
+<Transition name="toast">
+    <ToastInfo v-if="showToast"  :notifyText="publication" @close-notif="closeToast"/>
+</Transition>
 <form @submit.prevent="sendPost" enctype="multipart/form-data">
     <h3>Exprimez-vous ...</h3>
     <input v-model="content" id="publication" type="text" placeholder="Quoi de neuf ?" @change="contentChange">
@@ -33,7 +36,7 @@ import {ref} from 'vue';
 import {useLoginStore} from '@/stores/login';
 import {usePostStore} from '@/stores/sendPost';
 import { useAllPostsStore } from "../stores/allPosts";
-
+import ToastInfo from './ToastInfo.vue'
 
 const loginStore = useLoginStore();
 const postStore = usePostStore();
@@ -43,6 +46,11 @@ const content = ref(null);
 const url = ref('');
 const file = ref('')
 const errorMessage = ref('')
+
+const showToast = ref(false)
+const publication = ref('')
+
+const closeToast = () => showToast.value = false;
 
 
 const onFileChange = async(e) => {
@@ -102,9 +110,17 @@ const sendPost = async() => {
     }else{
 
         await fetch("http://localhost:5000/api/posts", requestOptions)
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+            .then(res => 
+            {  if(res.ok){
+                publication.value = 'Nouvelle publication'
+                showToast.value = true
+                setTimeout(() => {showToast.value = false }, 3500);
+
+             }
+
+                res.json()})
+            
+            .catch(err => console.log('error', err));
 
             function resetForm(){
             content.value = null;
@@ -234,6 +250,28 @@ form{
 
 }
 
+.toast-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-enter-active{
+    transition: all 0.3s ease;
+}
+.toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
+}
 
 
 </style>

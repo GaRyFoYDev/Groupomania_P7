@@ -1,4 +1,8 @@
 <template>
+<Transition name="toast">
+    <ToastInfo v-if="showToast"  :notifyText="publication" @close-notif="closeToast"/>
+</Transition>
+
 <div :id="post.uuid" v-for="post in allPostsStore.posts" :key="post.uuid" class="post_container">
 
   <div class="post_header">
@@ -106,6 +110,8 @@ import { useUserStore } from '../stores/user';
 import { useGetOnePostStore } from '../stores/getOnePost';
 import {useUpdatePostStore} from '../stores/updatePost';
 import {useAllCommentsStore}from '../stores/allComments'
+import ToastInfo from './ToastInfo.vue'
+
 
 const loginStore = useLoginStore();
 const allPostsStore = useAllPostsStore();
@@ -124,7 +130,10 @@ const errorUpdate = ref('')
 const errorComment = ref('')
 const likeData = ref(false)
 const commentBody = ref('')
+const showToast = ref(false)
+const publication = ref('')
 
+const closeToast = () => showToast.value = false;
 
 
  allPostsStore.refreshPosts();
@@ -143,7 +152,17 @@ async function deletePost(){
       body: JSON.stringify({'userUuid': userStore.uuid}),
       
     })
-    .then((res) => res.json());
+    .then((res) => {
+
+      if(res.ok){
+        publication.value = 'Publication supprimée '
+        showToast.value = true
+        setTimeout(() => {showToast.value = false }, 3500);
+
+      }
+
+      return res.json();
+    }) 
 
   await allPostsStore.refreshPosts()
 }
@@ -224,9 +243,16 @@ async function updatePost() {
     }else{
 
         await fetch(`http://localhost:5000/api/posts/${id.value}`, requestOptions)
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+            .then(res => {
+               if(res.ok){
+                  publication.value = 'Publication modifiée'
+                  showToast.value = true
+                  setTimeout(() => {showToast.value = false }, 3500);
+
+                    }
+          
+              return res.json()})
+            .catch(err => console.log('error', err));
 
             
           allPostsStore.refreshPosts()
@@ -768,4 +794,30 @@ async function deleteComment(){
   padding: 5px;
   font-size: 0.825rem;
 }
+
+
+
+.toast-enter-from{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-enter-to{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-enter-active{
+    transition: all 0.3s ease;
+}
+.toast-leave-from{
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-60px);
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
+}
+
 </style>
