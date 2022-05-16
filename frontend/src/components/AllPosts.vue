@@ -402,13 +402,18 @@ async function deleteComment(){
   &_header{
     display: flex;
     align-items: center;
+
+      @media screen and (max-width: 320px) {
+       padding: 10px 0;
+    }
   
     &_img{
      width: 15%;
   
       img{
       
-      width: 80%;
+      width: 60px;
+      height: 60px;
       margin: 10px 10px 0 10px;
       border-radius: 50%;
      
@@ -513,6 +518,10 @@ async function deleteComment(){
      @media screen and (max-width: 768px) {
        flex-direction: column;
     }
+     @media screen and (max-width: 768px) {
+       flex-direction: row;
+    }
+   
     
         &_modifier{
           background-color:#8e44ad;
@@ -521,6 +530,10 @@ async function deleteComment(){
           border-radius:4px;
           padding: 3px;
           font-size: 1.1rem;
+
+           @media screen and (max-width: 768px) {
+              font-size: 0.9rem;
+         }
          
           cursor: pointer;
 
@@ -537,6 +550,9 @@ async function deleteComment(){
           border-radius:4px;
           padding: 3px;
           
+           @media screen and (max-width: 768px) {
+              font-size: 0.9rem;
+           }
           cursor: pointer;
 
           &:hover{

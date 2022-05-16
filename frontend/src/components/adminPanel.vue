@@ -132,10 +132,12 @@ async function deleteAccount(){
 
     &_image{
         width: 60px;
+        height: 60px;
 
         img{
             border-radius: 50%;
-            width: 100%;
+             width: 60px;
+            height: 60px;
         }
        
     }
