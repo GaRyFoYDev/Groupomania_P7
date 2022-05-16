@@ -131,7 +131,7 @@ const commentBody = ref('')
  allCommentsStore.refreshComments();
 
 
-
+// Suppression d'un post
 async function deletePost(){
    
     await fetch(`http://localhost:5000/api/posts/${id.value}`, {
@@ -148,6 +148,7 @@ async function deletePost(){
   await allPostsStore.refreshPosts()
 }
 
+// Ouverture de la modal du modification d'un post et récupération des données du post dans le store
 async function open() {
 
     await fetch(`http://localhost:5000/api/posts/${id.value}`, 
@@ -188,6 +189,8 @@ const updateBody= async() => {
     
 }
 
+
+// Modification d'un post
 async function updatePost() {
 
     let myHeaders = new Headers();
@@ -232,7 +235,9 @@ async function updatePost() {
 
        
 }
-    
+
+
+// Like d'un post
 async function like() {
   
 
@@ -309,6 +314,8 @@ async function sendComment(){
 }
 }
 
+
+// Suppression d'un commentaire
 async function deleteComment(){
 
     const requestOptions = {

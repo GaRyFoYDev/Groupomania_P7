@@ -12,13 +12,6 @@ import ProfilPanel from "../components/profilPanel.vue";
 import AdminPanel from "../components/adminPanel.vue";
 
 
-// import{useUserStore} from '@/stores/user';
-// import{useLoginStore} from '@/stores/login';
-
-
-// const userStore = useUserStore();
-// const loginStore = useLoginStore();
-
 
 
 

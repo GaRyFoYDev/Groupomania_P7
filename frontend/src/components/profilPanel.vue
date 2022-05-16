@@ -98,6 +98,7 @@ const closeDeleteAccount = () => {
     router.push('/')
     }
 
+//Mis à jour de l'image de profil
 async function updateProfilImage() {
 
     file.value = document.getElementById('file').files[0];
@@ -125,6 +126,8 @@ async function updateProfilImage() {
 
 const {handleSubmit}= useForm();
 
+
+// Mis à jour du mot de passe
 const updatePassword = handleSubmit(async(values, {resetForm}) => {
 
     await fetch(`http://localhost:5000/api/auth/password/${id}`, {
@@ -166,7 +169,7 @@ const {value: currentValue, errorMessage: currentPasswordError, handleChange: ha
 
 
 
-
+// Suppresion d'un compte
 async function deleteAccount(){
 
     await fetch(`http://localhost:5000/api/auth/${id}`, {

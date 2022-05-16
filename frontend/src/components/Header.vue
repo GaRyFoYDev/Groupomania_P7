@@ -30,6 +30,8 @@ const close = () =>{
     router.push('/')
     };
 
+
+// LogOut de l'application 
 const logOut = async() =>{
 
     goodBye.value = true;

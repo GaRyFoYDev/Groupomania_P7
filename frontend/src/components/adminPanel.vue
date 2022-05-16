@@ -51,6 +51,7 @@ const nom = ref('');
 const prenom = ref('');
 const open = ref(false)
 
+// Fermeture de la modal suppression compte
 const closeDeleteAccount = () => { 
     successDeleteAccount.value = false
     router.push('/')
@@ -58,10 +59,11 @@ const closeDeleteAccount = () => {
     userStore.$reset();
     }
 
-
+// Récupération des infos du store User
 userStore.getAll();
 
 
+// Suppresion d'un compte
 async function deleteAccount(){
 
     await fetch(`http://localhost:5000/api/auth/${id.value}`, {

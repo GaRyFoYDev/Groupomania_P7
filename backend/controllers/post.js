@@ -1,6 +1,10 @@
 const {User, Post, sequelize}  = require('../models/');
 const fs = require("fs");
 
+
+
+
+// Création d'un post
 exports.createPost = async (req,res) => {
 
     const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
@@ -20,6 +24,9 @@ exports.createPost = async (req,res) => {
     }
 }
 
+
+
+// Récupération de tous les posts
 exports.getAllPosts = async(req, res) => {
 
     try {
@@ -40,6 +47,7 @@ exports.getAllPosts = async(req, res) => {
 }
 
 
+// Récupération d'un post
 exports.getOnePost = async (req, res) =>{
     try {
         
@@ -58,6 +66,10 @@ exports.getOnePost = async (req, res) =>{
     
 }
 
+
+
+
+// Suppression d'un post
 exports.deletePost = async(req, res) => {
     const {userUuid} = req.body
     const postUuid = req.params.uuid
@@ -93,6 +105,10 @@ exports.deletePost = async(req, res) => {
     }
 }
 
+
+
+
+// Modification d'un post
 exports.updatePost = async(req, res) => {
 
     const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.image;

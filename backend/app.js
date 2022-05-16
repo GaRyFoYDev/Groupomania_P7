@@ -32,7 +32,7 @@ const commentRoutes = require("./routes/comment");
 
 app.use(express.json());
 
-
+// Routes
 app.use('/api/auth', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
@@ -40,6 +40,7 @@ app.use('/api/comments', commentRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 
+// Connection à la base de donnée SQL
 app.listen(port, async () => {
     
         console.log(`Connection établie sur le port : ${port}`);

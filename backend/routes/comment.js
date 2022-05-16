@@ -8,7 +8,7 @@ const commentCtrl = require('../controllers/comment');
 
 
 
-// Création des routes utilisateurs
+// Création des routes commentaires
 router.post('/', auth, commentCtrl.createComment );
 router.get('/all', auth, commentCtrl.getAllComments );
 router.delete('/:uuid', auth, commentCtrl.deleteComment );

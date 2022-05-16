@@ -7,8 +7,10 @@ import router from './router';
 
 const app = createApp(App);
 
+//Utilisation de pinia pour le state management 
 const pinia = createPinia();
 
+// Utilisation du plugin pour la persistance des données
 pinia.use(piniaPluginPersistedstate);
 
 

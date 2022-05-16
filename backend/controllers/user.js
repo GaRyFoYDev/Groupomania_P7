@@ -28,6 +28,7 @@ exports.signup = async (req, res) => {
     }};
 
 
+    // Connection à l'application avec création du token JWT
 exports.login = async (req, res) => {
     
     try {
@@ -54,6 +55,10 @@ exports.login = async (req, res) => {
 
 };
 
+
+
+
+// Récupération de tous les utilisateurs
 exports.getAllUsers = async (req, res) =>{
     try {
         const users = await User.findAll({attributes: ["uuid", "nom", "prenom","role", "image"]})
@@ -66,6 +71,8 @@ exports.getAllUsers = async (req, res) =>{
     
 }
 
+
+// Récupération d'un utilisateur
 exports.getOneUser = async (req, res) =>{
     try {
         
@@ -116,6 +123,8 @@ exports.updatePassword = async (req, res) => {
 
 }
 
+
+// Mis à jour de l'image de profil
 exports.updateProfil = async(req, res) => {
 
     const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.image;
@@ -146,6 +155,8 @@ exports.updateProfil = async(req, res) => {
     }
 }
 
+
+// Suppression d'un utilisateur
 exports.deleteUser = async(req, res) => {
  
     const userUuid = req.params.uuid

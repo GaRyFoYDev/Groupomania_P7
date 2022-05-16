@@ -33,6 +33,8 @@ const API_URL = 'http://localhost:5000/api/auth/';
 
 const {handleSubmit}= useForm()
 const errorMessage = ref('')
+
+// Login avec vee-validate
 const mySubmit = handleSubmit(async(data, {resetForm}) =>{
  
     try {

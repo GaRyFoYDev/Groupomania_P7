@@ -8,7 +8,7 @@ const postCtrl = require('../controllers/post');
 const likeCtrl = require('../controllers/like');
 
 
-// Création des routes utilisateurs
+// Création des routes publications
 router.post('/', auth, multer, postCtrl.createPost );
 router.get('/all', auth,postCtrl.getAllPosts );
 router.get('/:uuid', auth, postCtrl.getOnePost);

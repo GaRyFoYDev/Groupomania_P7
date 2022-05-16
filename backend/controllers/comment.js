@@ -1,5 +1,8 @@
 const { Post, User, Comment, sequelize}  = require('../models/');
 
+
+
+// Création de commentaires
 exports.createComment = async (req,res) => {
 
 
@@ -26,6 +29,9 @@ exports.createComment = async (req,res) => {
         return res.status(500).json(error)
     }
 }
+
+
+// Récupértation de tous les commentaires
 exports.getAllComments = async(req, res) => {
 
     try {
@@ -46,7 +52,7 @@ exports.getAllComments = async(req, res) => {
     }
 }
 
-
+// Suppression des commentaires
 exports.deleteComment = async(req, res) => {
     const {userUuid} = req.body
     const commentUuid = req.params.uuid

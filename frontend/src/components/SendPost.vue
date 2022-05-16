@@ -66,7 +66,7 @@ const contentChange = () => {
 }
 
 
-
+// Envoi d'un post avec prise en charge des images
 const sendPost = async() => {
 
     let myHeaders = new Headers();
