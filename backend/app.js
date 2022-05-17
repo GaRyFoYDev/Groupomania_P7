@@ -1,7 +1,7 @@
 const express = require('express');
 const { sequelize} = require('./models');
 const path = require("path");
-
+const helmet = require("helmet");
 const port = process.env.PORT || 3000;
 
 require('dotenv').config();
@@ -31,6 +31,7 @@ const commentRoutes = require("./routes/comment");
 
 
 app.use(express.json());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 // Routes
 app.use('/api/auth', userRoutes);

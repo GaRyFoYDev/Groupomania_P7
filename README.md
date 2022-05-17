@@ -11,6 +11,12 @@ Run this command to install the packages
 npm install
 ```
 
+Run this commands to install the mysql2 and sequelize globally
+```
+npm i -g sequelize
+npm i mysql2
+```
+
 #### Database configuration 
 From the backend folder create a .env file
 
