@@ -11,7 +11,7 @@ Run this command to install the packages
 npm install
 ```
 
-Run this commands to install sequelize globally and mysql2
+Run these commands to install sequelize globally and mysql2
 ```
 npm i -g sequelize
 npm i mysql2
