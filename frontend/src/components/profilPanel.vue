@@ -113,7 +113,7 @@ async function updateProfilImage() {
     formdata.append("image",  updateProfilStore.image);
     formdata.append("userUuid", loginStore.userUuid);
 
-    await fetch(`http://localhost:5000/api/auth/photo/${id}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/auth/photo/${id}`, {
         method: 'PUT',
         headers: myHeaders,
         body: formdata
@@ -130,7 +130,7 @@ const {handleSubmit}= useForm();
 // Mis à jour du mot de passe
 const updatePassword = handleSubmit(async(values, {resetForm}) => {
 
-    await fetch(`http://localhost:5000/api/auth/password/${id}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/auth/password/${id}`, {
 
         method: 'PUT',
         body: JSON.stringify(values),
@@ -172,7 +172,7 @@ const {value: currentValue, errorMessage: currentPasswordError, handleChange: ha
 // Suppresion d'un compte
 async function deleteAccount(){
 
-    await fetch(`http://localhost:5000/api/auth/${id}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/auth/${id}`, {
        
        method: 'DELETE',
        headers: {

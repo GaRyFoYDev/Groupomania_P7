@@ -19,12 +19,15 @@ module.exports = {
     dialect: 'mysql'
   },
   production: {
-    username: process.env.PROD_DB_USERNAME,
-    password: process.env.PROD_DB_PASSWORD,
-    database: process.env.PROD_DB_NAME,
-    host: process.env.PROD_DB_HOST,
-    dialect: 'mysql'
+    username: process.env.DB_PRODUCTION_USERNAME ,
+    password:process.env.DB_PRODUCTION_PASSWORD ,
+    database: process.env.DB_PRODUCTION_DATABASE,
+    host: process.env.DB_PRODUCTION_HOST,
+    dialect: 'mysql',
+    timezone: "+02:00",
+
+    
   }
 };
 
-console.log(process.env.DB_USERNAME);
+//console.log(process.env.DB_USERNAME);

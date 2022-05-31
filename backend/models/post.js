@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    image_id: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     likes: {
       type: DataTypes.INTEGER,
       allowNull: false,   

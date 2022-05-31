@@ -53,7 +53,7 @@ const {handleSubmit, isSubmitting}= useForm();
 const mySubmit = handleSubmit(async(values, {resetForm}) =>{
   
 
-        await fetch('http://localhost:5000/api/auth/signup', {
+        await fetch('https://groupomania-p7-oc.herokuapp.com/api/auth/signup', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: { 'Content-Type': 'application/json'} 

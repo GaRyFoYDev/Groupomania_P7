@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', {
     actions: {
       getUser(){
 
-        fetch('http://localhost:5000/api/auth/' + loginStore.userUuid, {headers: {"Authorization": `Bearer ${loginStore.token}`}})
+        fetch('https://groupomania-p7-oc.herokuapp.com/api/auth/' + loginStore.userUuid, {headers: {"Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => this.$state = {
             uuid: data.uuid,
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
       },
 
       getAll(){
-        fetch('http://localhost:5000/api/auth/users', {headers: {"Authorization": `Bearer ${loginStore.token}`}})
+        fetch('https://groupomania-p7-oc.herokuapp.com/api/auth/users', {headers: {"Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => this.$state = {users: data})
 

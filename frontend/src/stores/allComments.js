@@ -15,7 +15,7 @@ export const useAllCommentsStore = defineStore('allcomments', {
     actions: {
       refreshComments(){
 
-        fetch( 'http://localhost:5000/api/comments/all', 
+        fetch( 'https://groupomania-p7-oc.herokuapp.com/api/comments/all', 
         {headers: { "Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => this.comments = data) 

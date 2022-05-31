@@ -1,5 +1,7 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('../middleware/cloudinary');
+const fs = require("fs");
 
 const {User}  = require('../models/')
 
@@ -46,7 +48,7 @@ exports.login = async (req, res) => {
                 
         return res.status(200).json({ 
           userUuid: user.uuid,
-          token: jwt.sign({ userUuid: user.uuid }, process.env.SECRET, {expiresIn : '24h'}),
+          token: jwt.sign({ userUuid: user.uuid },process.env.SECRET, {expiresIn : '24h'}),
         });
             
     }catch (error) {
@@ -127,9 +129,6 @@ exports.updatePassword = async (req, res) => {
 // Mis à jour de l'image de profil
 exports.updateProfil = async(req, res) => {
 
-    const image = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.image;
-    
-    
     const userUuid = req.params.uuid;
    
     try {
@@ -137,13 +136,21 @@ exports.updateProfil = async(req, res) => {
         const user = await User.findOne({where: {uuid: userUuid}})
 
         if(!user){
-            return res.status(404).json({message: "Aucune publication trouvée !"});
+            return res.status(404).json({message: "Aucun utilisateur trouvée !"});
 
         } else{
     
-                 
-                  await User.update({image: image}, {where: {uuid : userUuid}});
-                
+                 const result = await cloudinary.uploader.upload(req.file.path);
+                 const image = await result.secure_url;
+
+                  await User.update({image: image, image_id: result.public_id}, {where: {uuid : userUuid}});
+                  cloudinary.uploader.destroy(user.image_id);
+
+                  fs.unlink(req.file.path , () => {
+          
+                    console.log('ok');
+                });
+
                   return res.status(200).json({message: "Image de profil modifiée avec succès !"})
     
                    }

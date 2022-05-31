@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // Middleware d'authentification 
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, process.env.SECRET);
+    const decodedToken = jwt.verify(token,process.env.SECRET);
     const userUuid = decodedToken.userUuid;
 
     // Vérification de la concordance entre les clés utilisateurs

@@ -85,7 +85,7 @@ const sendPost = async() => {
     formdata.append("image", postStore.image);
     formdata.append("userUuid", loginStore.userUuid);
     formdata.append("body", postStore.body);
-    formdata.append("likes", postStore.body);
+    formdata.append("likes", 0);
 
    
 
@@ -109,7 +109,7 @@ const sendPost = async() => {
         
     }else{
 
-        await fetch("http://localhost:5000/api/posts", requestOptions)
+        await fetch("https://groupomania-p7-oc.herokuapp.com/api/posts", requestOptions)
             .then(res => 
             {  if(res.ok){
                 publication.value = 'Nouvelle publication'

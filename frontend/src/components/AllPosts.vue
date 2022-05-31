@@ -143,7 +143,7 @@ const closeToast = () => showToast.value = false;
 // Suppression d'un post
 async function deletePost(){
    
-    await fetch(`http://localhost:5000/api/posts/${id.value}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/posts/${id.value}`, {
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +170,7 @@ async function deletePost(){
 // Ouverture de la modal du modification d'un post et récupération des données du post dans le store
 async function open() {
 
-    await fetch(`http://localhost:5000/api/posts/${id.value}`, 
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/posts/${id.value}`, 
         {headers: { "Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => {getOnePost.$state = { body: data.body, image: data.image} })
@@ -242,7 +242,7 @@ async function updatePost() {
         
     }else{
 
-        await fetch(`http://localhost:5000/api/posts/${id.value}`, requestOptions)
+        await fetch(`https://groupomania-p7-oc.herokuapp.com/api/posts/${id.value}`, requestOptions)
             .then(res => {
                if(res.ok){
                   publication.value = 'Publication modifiée'
@@ -267,7 +267,7 @@ async function updatePost() {
 async function like() {
   
 
-    await fetch(`http://localhost:5000/api/posts/like/${id.value}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/posts/like/${id.value}`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -329,7 +329,7 @@ async function sendComment(){
       }
     }
 
-    await fetch('http://localhost:5000/api/comments',requestOptions)
+    await fetch('https://groupomania-p7-oc.herokuapp.com/api/comments',requestOptions)
         .then((res) => res.json())
 
 
@@ -355,7 +355,7 @@ async function deleteComment(){
       }
     }
 
-    await fetch(`http://localhost:5000/api/comments/${commentId.value}`, requestOptions)
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/comments/${commentId.value}`, requestOptions)
         .then((res) => res.json())
 
 

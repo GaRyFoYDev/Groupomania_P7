@@ -66,7 +66,7 @@ userStore.getAll();
 // Suppresion d'un compte
 async function deleteAccount(){
 
-    await fetch(`http://localhost:5000/api/auth/${id.value}`, {
+    await fetch(`https://groupomania-p7-oc.herokuapp.com/api/auth/${id.value}`, {
        
        method: 'DELETE',
        headers: {

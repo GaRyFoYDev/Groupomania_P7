@@ -23,6 +23,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      image_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       likes: {
         type: Sequelize.INTEGER,
         allowNull: false,   

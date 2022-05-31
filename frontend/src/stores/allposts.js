@@ -15,7 +15,7 @@ export const useAllPostsStore = defineStore('allposts', {
     actions: {
       refreshPosts(){
 
-        fetch( 'http://localhost:5000/api/posts/all', 
+        fetch( 'https://groupomania-p7-oc.herokuapp.com/api/posts/all', 
         {headers: { "Authorization": `Bearer ${loginStore.token}`}})
         .then((res) => res.json())
         .then((data) => this.posts = data) 

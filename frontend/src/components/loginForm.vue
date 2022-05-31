@@ -28,7 +28,7 @@ import {useLoginStore} from '@/stores/login';
 const loginStore = useLoginStore();
 
 
-const API_URL = 'http://localhost:5000/api/auth/';
+const API_URL = 'https://groupomania-p7-oc.herokuapp.com/api/auth/';
 
 
 const {handleSubmit}= useForm()
