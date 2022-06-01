@@ -85,7 +85,7 @@ const sendPost = async() => {
     formdata.append("image", postStore.image);
     formdata.append("userUuid", loginStore.userUuid);
     formdata.append("body", postStore.body);
-    formdata.append("likes", 0);
+  
 
    
 

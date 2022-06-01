@@ -14,20 +14,25 @@ exports.createPost = async (req,res) => {
     const likes = 0;
    
     try {
-        const result = await cloudinary.uploader.upload(req.file.path);
-        const user = await User.findOne({where: {uuid: userUuid}})
+        const result = req.file ? await cloudinary.uploader.upload(req.file.path) : false ;
+        const image = req.file ? result.secure_url : "" ;
+        const image_id = req.file ? result.public_id : "" ;
+        const user = await User.findOne({where: {uuid: userUuid}});
         const post = await Post.create({
             body,
-            image:result.secure_url,
-            image_id: result.public_id,
+            image,
+            image_id,
             likes, 
             userId : user.id})
+        
+        if(req.file){
 
-        fs.unlink(req.file.path , () => {
-          
-            console.log('ok');
-        });
-       
+            fs.unlink(req.file.path , () => {
+              
+                console.log('ok');
+            });
+           
+        }
         return res.status(201).json(post)
 
     } catch (error) {
@@ -97,7 +102,9 @@ exports.deletePost = async(req, res) => {
 
                 if(user.id  === post.userId || user.role === 'admin'){
                 
-                await cloudinary.uploader.destroy(post.image_id)
+                if(post.image_id !== "" && post.image !== ""){
+                    await cloudinary.uploader.destroy(post.image_id)
+                }
                 Post.destroy({where: {uuid : postUuid}})
                  
 
@@ -145,18 +152,24 @@ exports.updatePost = async(req, res) => {
     
                   if(user.id  === post.userId){
                     
-                    const result = await cloudinary.uploader.upload(req.file.path);
-                    const image = req.file ? result.secure_url : req.body.image;
-
-                    await Post.update({ body, image, image_id: result.public_id}, {where: {uuid : postUuid}});
-                    console.log();
-                    fs.unlink(req.file.path, () => {
-                        console.log('ok');
-                    });
-
-                    await cloudinary.uploader.destroy(post.image_id)
+                   const result = req.file ? await cloudinary.uploader.upload(req.file.path) : false ;
+                   const image = req.file ? result.secure_url : req.body.image;
+                   const image_id = req.file ? result.public_id : req.body.image_id;
                     
-          
+
+                    await Post.update({ body, image, image_id}, {where: {uuid : postUuid}});
+                   
+
+                    if(req.file){
+
+                        fs.unlink(req.file.path , () => {
+                          
+                            console.log('ok');
+                        });
+
+                        await cloudinary.uploader.destroy(post.image_id)
+                    }
+
                 
                   return res.status(200).json({message: "Publication modifiée avec succès !", result})
     

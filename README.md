@@ -1,5 +1,9 @@
 # Groupomania_P7
 
+## App fully deployed
+
+https://groupomania-p7-oc.netlify.app/
+
 ## Backend
 
 ### Installation

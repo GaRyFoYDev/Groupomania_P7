@@ -146,10 +146,10 @@ exports.updateProfil = async(req, res) => {
                   await User.update({image: image, image_id: result.public_id}, {where: {uuid : userUuid}});
                   cloudinary.uploader.destroy(user.image_id);
 
-                  fs.unlink(req.file.path , () => {
+                //   fs.unlink(req.file.path , () => {
           
-                    console.log('ok');
-                });
+                //     console.log('ok');
+                // });
 
                   return res.status(200).json({message: "Image de profil modifiée avec succès !"})
     
